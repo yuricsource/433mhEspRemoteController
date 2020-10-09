@@ -654,7 +654,7 @@ void TestLed()
 	led.Color.Red = 0xff /8;
 	led.Color.Blue = 0xff /3;
 	led.Color.Green = 0xff / 8;
-	Hardware::Instance()->GetLeds().SetLedsCount(10);
+	Hardware::Instance()->GetLeds().SetLedsCount(256);
 	
 	for(;;)
 	{
@@ -666,9 +666,10 @@ void TestLed()
 			hsv.Color.Value = i;
 			hsv.Color.Saturation = 255;
 			Utilities::ColorConverter::HsvToRgb(hsv, led);
-			for(uint8_t ledIndex = 0; ledIndex < 10; ledIndex++)
+			for(uint16_t ledIndex = 0; ledIndex < 256; ledIndex++)
 				Hardware::Instance()->GetLeds().SetLedColor(ledIndex, led);
-			if (i != 0)
+			Hardware::Instance()->GetLeds().Refresh();
+			if (i != 0 && i % 26)
 				vTaskDelay((50 / i));
 			//printf("i = %d -> R=%d, G=%d, B=%d\n", i, led.Color.Red, led.Color.Blue, led.Color.Blue);
 		}
@@ -678,9 +679,11 @@ void TestLed()
 			hsv.Color.Value = i;
 			hsv.Color.Saturation = 255;
 			Utilities::ColorConverter::HsvToRgb(hsv, led);
-			for(uint8_t ledIndex = 0; ledIndex < 10; ledIndex++)
+			for(uint16_t ledIndex = 0; ledIndex < 256; ledIndex++)
 				Hardware::Instance()->GetLeds().SetLedColor(ledIndex, led);
-			vTaskDelay((50 / i));
+			Hardware::Instance()->GetLeds().Refresh();
+			if (i % 26)
+				vTaskDelay((50 / i));
 			//printf("i = %d -> R=%d, G=%d, B=%d\n", i, led.Color.Red, led.Color.Blue, led.Color.Blue);
 		}
 

@@ -8,12 +8,11 @@ namespace Hal
 {
 using Utilities::DebugAssert;
 
-Rmt::Rmt(Gpio *IoPins, Gpio::GpioIndex transmitterPin, RmtChannel channel) : _gpio(IoPins), _transmitterPin(transmitterPin),
-														_maxLeds(Hal::MaxAddressableLeds), _channel(channel)
+Rmt::Rmt(Gpio *IoPins, Gpio::GpioIndex transmitterPin, RmtChannel channel) : _gpio(IoPins), _transmitterPin(transmitterPin)
 {
 	rmt_config_t config;
 	config.rmt_mode = RMT_MODE_TX;
-	config.channel = static_cast<rmt_channel_t>(_channel);
+	config.channel = static_cast<rmt_channel_t>(channel);
 	config.gpio_num = static_cast<gpio_num_t>(_transmitterPin);
 	config.mem_block_num = 3;
 	config.tx_config.loop_en = false;
@@ -25,6 +24,8 @@ Rmt::Rmt(Gpio *IoPins, Gpio::GpioIndex transmitterPin, RmtChannel channel) : _gp
 	ESP_ERROR_CHECK(rmt_config(&config));
 	ESP_ERROR_CHECK(rmt_driver_install(config.channel, 0, 0));
 	_rmtBuffer.Semaphore = xSemaphoreCreateBinary();
+	_rmtBuffer.Channel = channel;
+	_rmtBuffer.MaxLeds = Hal::MaxAddressableLeds;
 	xSemaphoreGive(_rmtBuffer.Semaphore);
 }
 
@@ -37,7 +38,7 @@ bool Rmt::SetMaxLeds(uint16_t maxLeds)
 	if (maxLeds > Hal::MaxAddressableLeds)
 		return false;
 	
-	_maxLeds = maxLeds;
+	_rmtBuffer.MaxLeds = maxLeds;
 	return true;
 }
 
@@ -45,9 +46,10 @@ void IRAM_ATTR Rmt::doneOnChannel(rmt_channel_t channel, void * arg)
 {
 	Hal::Rmt::RmtBufferLed* rmtBuffer = (RmtBufferLed*)arg;
 	rmtBuffer->LedIndex++;
+	
 	if (rmtBuffer->LedIndex < rmtBuffer->MaxLeds)
 	{
-		ESP_ERROR_CHECK(rmt_write_items(LED_RMT_TX_CHANNEL, 
+		ESP_ERROR_CHECK(rmt_write_items(channel, 
 						&rmtBuffer->LedBuffer[Hal::BitsPerLed * rmtBuffer->LedIndex],
 						Hal::BitsPerLed, false));
 	}
@@ -61,7 +63,7 @@ void Rmt::Write()
 	// Give a delay of 100 micro seconds to flush the last writing if there was
 	Dwt::DelayMicrosecond(100);
 	_rmtBuffer.LedIndex = 0;
-	ESP_ERROR_CHECK(rmt_write_items(LED_RMT_TX_CHANNEL, &_rmtBuffer.LedBuffer[0], Hal::BitsPerLed, false));
+	ESP_ERROR_CHECK(rmt_write_items(static_cast<rmt_channel_t>(_rmtBuffer.Channel), &_rmtBuffer.LedBuffer[0], Hal::BitsPerLed, false));
 	rmt_register_tx_end_callback(doneOnChannel, &_rmtBuffer);
 }
 

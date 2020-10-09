@@ -292,7 +292,7 @@ static_assert(sizeof(LedHsv) == 4);
 
 static constexpr uint8_t BitsPerLed = 8 * 3; // each RGB * 8 bits
 
-static constexpr uint8_t MaxAddressableLeds = 64;
+static constexpr uint16_t MaxAddressableLeds = 256;
 using LedsArray = array<Led, MaxAddressableLeds>;
 //static_assert(sizeof(LedsArray) == 30, "Array has invalid size.");
 

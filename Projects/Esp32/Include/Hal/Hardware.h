@@ -53,7 +53,7 @@ public:
 	Adc &GetAdc() { return _adc; }
 	Dac &GetDac() { return _dac; }
 	SdCard &GetSdCard() { return _sdCard; }
-	Rmt &GetRmt(){ return _rmt; }
+	Rmt &GetRmt(){ return _rmtLeds; }
 	I2c &GetI2c() { return _i2c; }
 	IoExtender& GetIoExtender() { return _ioExtender; }
 
@@ -103,7 +103,7 @@ private:
 	Timer _timer1;
 	Dac _dac;
 	SdCard _sdCard;
-	Rmt _rmt;
+	Rmt _rmtLeds;
 	Leds _leds;
 	I2c _i2c;
 	IoExtender _ioExtender;

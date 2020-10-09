@@ -28,8 +28,8 @@ Hardware::Hardware() :	_gpio(),
 						_timer1(&_timerInterruptHandler, TimerSelect::Timer1),
 						_dac(&_gpio, Gpio::GpioIndex::Gpio25),
 						_sdCard(&_gpio, Gpio::GpioIndex::Gpio2, Gpio::GpioIndex::Gpio15, Gpio::GpioIndex::Gpio14, Gpio::GpioIndex::Gpio13),
-						_rmt(&_gpio, Gpio::GpioIndex::Gpio33, RmtChannel::RmtChannel0),
-						_leds(&_gpio, &_timer0, &_rmt),
+						_rmtLeds(&_gpio, Gpio::GpioIndex::Gpio33, RmtChannel::RmtChannel0),
+						_leds(&_gpio, &_timer0, &_rmtLeds),
 						_i2c(&_gpio, Hal::I2cPort::I2c0, Gpio::GpioIndex::Gpio4, Gpio::GpioIndex::Gpio27),
 						_ioExtender(&_gpio, &_i2c, Gpio::GpioIndex::Gpio32, 0x18)
 {

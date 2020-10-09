@@ -85,6 +85,7 @@ extern "C" void app_main(void)
 	Hal::Hardware::Instance();
  	printf("Hardware Tester for ESP32\n");
 
+	TestLed();
 	Hal::Hardware::Instance()->GetCamera().Init();
 	startCameraServer();
 	
@@ -92,7 +93,6 @@ extern "C" void app_main(void)
 	char test = 0;
 	
 
-	//TestLed();
 
 	Hal::Hardware::Instance()->GetWifi().Disable();
 	Hal::Hardware::Instance()->GetWifi().SetSsid("Yuri_Duda", strlen("Yuri_Duda"));

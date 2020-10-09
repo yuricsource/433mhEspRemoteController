@@ -36,7 +36,7 @@ bool Leds::SetLedColor(uint16_t ledIndex, Led led)
 		return false;
 
 	_outputLeds.data()[ledIndex].Value = led.Value;
-	Refresh();
+	//Refresh();
 	return true;
 }
 

@@ -12,7 +12,6 @@
 #include "freertos/semphr.h"
 
 // Configure these based on your project needs ********
-#define LED_RMT_TX_CHANNEL RMT_CHANNEL_0
 #define LED_RMT_TX_GPIO 18
 // ****************************************************
 
@@ -68,14 +67,13 @@ public:
 		uint16_t MaxLeds = 0;
 		xSemaphoreHandle Semaphore;
 		rmt_item32_t LedBuffer[Hal::BitsPerLed * Hal::MaxAddressableLeds] = {};
+		RmtChannel Channel = RmtChannel::RmtChannel0;
 	};
 private:
 	RmtBufferLed _rmtBuffer = {};
 	static void IRAM_ATTR doneOnChannel(rmt_channel_t channel, void * arg);
 	Gpio *_gpio;
 	Gpio::GpioIndex _transmitterPin;
-	uint16_t _maxLeds;
-	RmtChannel _channel;
 	rmt_item32_t tOn = {{{T1H, 1, T1L, 0}}};
 	rmt_item32_t tOff = {{{T0H, 1, T0L, 0}}};
 	// This is the buffer which the hw peripheral will access while pulsing the output pin

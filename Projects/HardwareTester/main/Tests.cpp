@@ -711,6 +711,10 @@ void TestLed()
 	// }
 	// startTimer = !startTimer;
 }
+void TestTransmitter()
+{
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+}
 
 void TestI2sClock()
 {

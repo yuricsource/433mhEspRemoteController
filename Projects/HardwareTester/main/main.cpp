@@ -28,7 +28,8 @@ void executetMenu(char Test)
 
 	case 't':
 	case 'T':
-		LedMenu();
+		//LedMenu();
+		TestLed();
 		break;
 	case 'r':
 	case 'R':
@@ -69,14 +70,14 @@ void executetMenu(char Test)
 	printf("\n");
 	printf("Main menu:\n");
 	printf("----------\n");
-	printf("[T] - Led Menu\n");
+	printf("[T] - Led Test\n");
 	printf("[R] - Software Reset Test\n");
 	printf("[F] - Deep Sleep for 5 Seconds.\n");
 	printf("[S] - Test SPIFFS\n");
 	printf("[V] - Test SD Card\n");
 	printf("[W] - WiFi Menu\n");
 	printf("[C] - Camera Menu\n");
-	printf("[D] - Test Timer [ON/OFF]\n");
+	printf("[D] - Test controller transmitter\n");
 	printf("[I] - IO Extender menu\n");
 }
 
@@ -85,22 +86,21 @@ extern "C" void app_main(void)
 	Hal::Hardware::Instance();
  	printf("Hardware Tester for ESP32\n");
 
-	TestLed();
-	Hal::Hardware::Instance()->GetCamera().Init();
-	startCameraServer();
+	//TestLed();
+	// Hal::Hardware::Instance()->GetCamera().Init();
+	// startCameraServer();
 	
 	TestClass testClass;
 	char test = 0;
 	
-
-
+	/*
 	Hal::Hardware::Instance()->GetWifi().Disable();
 	Hal::Hardware::Instance()->GetWifi().SetSsid("Yuri_Duda", strlen("Yuri_Duda"));
 	Hal::Hardware::Instance()->GetWifi().SetPassword("Australia2us", strlen("Australia2us"));
 	Hal::Hardware::Instance()->GetWifi().SetMode(Hal::WifiModeConfiguration::Client);
 	Hal::Hardware::Instance()->GetWifi().SetAuthentication(Hal::WifiAuthenticationMode::Wpa2Psk);
 	Hal::Hardware::Instance()->GetWifi().Enable();
-
+	*/
 	while (1)
 	{
 		executetMenu(test);

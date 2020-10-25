@@ -28,10 +28,12 @@ Hardware::Hardware() :	_gpio(),
 						_timer1(&_timerInterruptHandler, TimerSelect::Timer1),
 						_dac(&_gpio, Gpio::GpioIndex::Gpio25),
 						_sdCard(&_gpio, Gpio::GpioIndex::Gpio2, Gpio::GpioIndex::Gpio15, Gpio::GpioIndex::Gpio14, Gpio::GpioIndex::Gpio13),
-						_rmtLeds(&_gpio, Gpio::GpioIndex::Gpio33, RmtChannel::RmtChannel0),
+						_rmtLeds(&_gpio, Gpio::GpioIndex::Gpio33, RmtChannel::RmtChannel0, Hal::BitsPerLed * Hal::MaxAddressableLeds, Hal::BitsPerLed),
+						_rmtRemoteControl(&_gpio, Gpio::GpioIndex::Gpio2, RmtChannel::RmtChannel1, 10),
 						_leds(&_gpio, &_timer0, &_rmtLeds),
 						_i2c(&_gpio, Hal::I2cPort::I2c0, Gpio::GpioIndex::Gpio4, Gpio::GpioIndex::Gpio27),
-						_ioExtender(&_gpio, &_i2c, Gpio::GpioIndex::Gpio32, 0x18)
+						_ioExtender(&_gpio, &_i2c, Gpio::GpioIndex::Gpio32, 0x18),
+						_rfControl(&_gpio, &_rmtRemoteControl)
 {
 	esp_chip_info(&_mcuInfo);
 	esp_base_mac_addr_get(_macAdrress.data());
@@ -67,8 +69,8 @@ Hardware::Hardware() :	_gpio(),
 		printf("!!! Error: Only one instance of System can be created !!!\n");
 
 #ifdef HARDWARE_TESTER
-	_i2c.ScanDevices();
-	_ioExtender.Refresh(true);
+//	_i2c.ScanDevices();
+//	_ioExtender.Refresh(true);
 #endif
 	// _spiffs.Mount();
 	// _sdCard.Mount();

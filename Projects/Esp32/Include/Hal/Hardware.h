@@ -29,6 +29,7 @@
 #include "Rmt.h"
 #include "I2c.h"
 #include "IoExtender.h"
+#include "RfControl.h"
 
 namespace Hal
 {
@@ -56,7 +57,7 @@ public:
 	Rmt &GetRmt(){ return _rmtLeds; }
 	I2c &GetI2c() { return _i2c; }
 	IoExtender& GetIoExtender() { return _ioExtender; }
-
+	RfControl& GetRfControl() { return _rfControl; }
 	uint32_t Milliseconds();
 	void TimerCallback();
 	ResetReason GetResetReason();
@@ -104,9 +105,11 @@ private:
 	Dac _dac;
 	SdCard _sdCard;
 	Rmt _rmtLeds;
+	Rmt _rmtRemoteControl;
 	Leds _leds;
 	I2c _i2c;
 	IoExtender _ioExtender;
+	RfControl _rfControl;
 };
 } // namespace Hal
 

@@ -27,7 +27,7 @@ bool Leds::SetLedsCount(uint16_t ledIndex)
 		return false;
 
 	_maxLeds = ledIndex;
-	_rmt->SetMaxLeds(_maxLeds);
+	_rmt->SetMaxUnitsToSend(_maxLeds);
 	return true;
 }
 bool Leds::SetLedColor(uint16_t ledIndex, Led led)
@@ -55,7 +55,8 @@ void Leds::ResetAllLeds()
 
 void Leds::Refresh()
 {
-	_rmt->UpdateAllLeds(_outputLeds);
+	uint32_t* ledsBufferPointer = reinterpret_cast<uint32_t*>(_outputLeds.data());
+	_rmt->UpdateBuffer(ledsBufferPointer, _outputLeds.size());
 	_rmt->Write();
 }
 

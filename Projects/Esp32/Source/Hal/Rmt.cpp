@@ -8,7 +8,7 @@ namespace Hal
 {
 using Utilities::DebugAssert;
 
-Rmt::Rmt(Gpio *IoPins, Gpio::GpioIndex transmitterPin, RmtChannel channel) : _gpio(IoPins), _transmitterPin(transmitterPin)
+Rmt::Rmt(Gpio *IoPins, Gpio::GpioIndex transmitterPin, RmtChannel channel, uint16_t bufferSize, uint16_t unitSize) : _gpio(IoPins), _transmitterPin(transmitterPin)
 {
 	rmt_config_t config;
 	config.rmt_mode = RMT_MODE_TX;
@@ -21,11 +21,15 @@ Rmt::Rmt(Gpio *IoPins, Gpio::GpioIndex transmitterPin, RmtChannel channel) : _gp
 	config.tx_config.idle_level = static_cast<rmt_idle_level_t>(0);
 	config.clk_div = 2;
 
+	_rmtBuffer.UnitSize = unitSize;
+	_rmtBuffer.BufferSize = bufferSize;
+	_rmtBuffer.Buffer = new rmt_item32_t[bufferSize];
+
 	ESP_ERROR_CHECK(rmt_config(&config));
 	ESP_ERROR_CHECK(rmt_driver_install(config.channel, 0, 0));
 	_rmtBuffer.Semaphore = xSemaphoreCreateBinary();
 	_rmtBuffer.Channel = channel;
-	_rmtBuffer.MaxLeds = Hal::MaxAddressableLeds;
+	_rmtBuffer.MaxUnitsToSend = 0;
 	xSemaphoreGive(_rmtBuffer.Semaphore);
 }
 
@@ -33,24 +37,34 @@ Rmt::~Rmt()
 {
 }
 
-bool Rmt::SetMaxLeds(uint16_t maxLeds)
+bool Rmt::SetMaxUnitsToSend(uint16_t maxUnits)
 {
-	if (maxLeds > Hal::MaxAddressableLeds)
+	if (maxUnits > Hal::MaxAddressableLeds)
 		return false;
 	
-	_rmtBuffer.MaxLeds = maxLeds;
+	_rmtBuffer.MaxUnitsToSend = maxUnits;
+	return true;
+}
+
+
+bool Rmt::SetUnitSize(uint16_t unitSize)
+{
+	if (unitSize == 0)
+		return false;
+	
+	_rmtBuffer.UnitSize = unitSize;
 	return true;
 }
 
 void IRAM_ATTR Rmt::doneOnChannel(rmt_channel_t channel, void * arg)
 {
 	Hal::Rmt::RmtBufferLed* rmtBuffer = (RmtBufferLed*)arg;
-	rmtBuffer->LedIndex++;
+	rmtBuffer->Index++;
 	
-	if (rmtBuffer->LedIndex < rmtBuffer->MaxLeds)
+	if (rmtBuffer->Index < rmtBuffer->MaxUnitsToSend)
 	{
 		ESP_ERROR_CHECK(rmt_write_items(channel, 
-						&rmtBuffer->LedBuffer[Hal::BitsPerLed * rmtBuffer->LedIndex],
+						&rmtBuffer->Buffer[Hal::BitsPerLed * rmtBuffer->Index],
 						Hal::BitsPerLed, false));
 	}
 	else
@@ -62,46 +76,34 @@ void Rmt::Write()
 	xSemaphoreTake(_rmtBuffer.Semaphore, portMAX_DELAY);
 	// Give a delay of 100 micro seconds to flush the last writing if there was
 	Dwt::DelayMicrosecond(100);
-	_rmtBuffer.LedIndex = 0;
-	ESP_ERROR_CHECK(rmt_write_items(static_cast<rmt_channel_t>(_rmtBuffer.Channel), &_rmtBuffer.LedBuffer[0], Hal::BitsPerLed, false));
+	_rmtBuffer.Index = 0;
+	ESP_ERROR_CHECK(rmt_write_items(static_cast<rmt_channel_t>(_rmtBuffer.Channel), &_rmtBuffer.Buffer[0], _rmtBuffer.UnitSize, false));
 	rmt_register_tx_end_callback(doneOnChannel, &_rmtBuffer);
 }
 
-void Rmt::UpdateLed(uint16_t ledId, Led color)
+bool Rmt::UpdateBuffer(uint32_t *buffer, uint16_t length)
 {
-	uint32_t bits_to_send = color.Value;
-	uint32_t mask = 1 << (BITS_PER_LED_CMD - 1);
-	for (uint32_t bit = 0; bit < BITS_PER_LED_CMD; bit++)
+	if (length > _rmtBuffer.BufferSize)
+		return false;
+
+	for(uint16_t i = 0; i <length; i++)
 	{
-		uint32_t bit_is_set = bits_to_send & mask;
-
-		if (bit_is_set)
-			_rmtBuffer.LedBuffer[ledId * BITS_PER_LED_CMD + bit] = tOn;
-		else
-			_rmtBuffer.LedBuffer[ledId * BITS_PER_LED_CMD + bit] = tOff;
-
-		mask >>= 1;
-	}
-}
-
-void Rmt::UpdateAllLeds(LedsArray leds)
-{
-	for(uint16_t ledIndex = 0; ledIndex < leds.size(); ledIndex++)
-	{
-		uint32_t bits_to_send = leds.data()[ledIndex].Value;
-		uint32_t mask = 1 << (BITS_PER_LED_CMD - 1);
-		for (uint32_t bit = 0; bit < BITS_PER_LED_CMD; bit++)
+		uint32_t bits_to_send = buffer[i];
+		uint32_t mask = 1 << (_rmtBuffer.UnitSize - 1);
+		for (uint32_t bit = 0; bit < _rmtBuffer.UnitSize; bit++)
 		{
 			uint32_t bit_is_set = bits_to_send & mask;
 
 			if (bit_is_set)
-				_rmtBuffer.LedBuffer[ledIndex * BITS_PER_LED_CMD + bit] = tOn;
+				_rmtBuffer.Buffer[i * _rmtBuffer.UnitSize + bit] = tOn;
 			else
-				_rmtBuffer.LedBuffer[ledIndex * BITS_PER_LED_CMD + bit] = tOff;
+				_rmtBuffer.Buffer[i * _rmtBuffer.UnitSize + bit] = tOff;
 
 			mask >>= 1;
 		}
 	}
+	
+	return true;
 }
 
 

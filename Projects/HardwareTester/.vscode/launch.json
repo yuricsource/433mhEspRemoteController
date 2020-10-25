@@ -12,7 +12,7 @@
       "miDebuggerPath": "xtensa-esp32-elf-gdb",
       "cwd": "${workspaceFolder}/build",
       //change the name of the elf file as required
-      "program": "${workspaceFolder}/build/app-hardware-tester.elf",
+      "program": "${workspaceFolder}/build/app-template.elf",
       "setupCommands": [
         {
           "description": "Enable pretty-printing for gdb",
@@ -22,7 +22,7 @@
         {
           // there's a bug in vs code that prevents us from using ${workspaceFolder} variable.
           // update the path as needed
-          "text": "file '/home/yuri/projects/Esp32Cam/Projects/HardwareTester/build/app-hardware-tester.elf'"
+          "text": "file 'C:\\YuriCode\\433mhEspRemoteController\\Projects\\HardwareTester\\build\\app-template.elf'"
         },
         {
           "text": "target remote 127.0.0.1:3333"

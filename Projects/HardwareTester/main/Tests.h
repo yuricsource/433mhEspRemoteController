@@ -109,6 +109,7 @@ void TestLed();
 void TestI2sClock();
 void TestSdCard();
 void IoExtenderMenu();
+void TestTransmitter();
 
 const char *GetTestPhrase();
 

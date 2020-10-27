@@ -42,9 +42,17 @@ bool Rmt::SetMaxUnitsToSend(uint16_t maxUnits)
 		return false;
 	
 	_rmtBuffer.MaxUnitsToSend = maxUnits;
+	_rmtBuffer.MaxBits = _rmtBuffer.MaxUnitsToSend * _rmtBuffer.UnitSize;
 	return true;
 }
 
+bool Rmt::SetMaxBitsToSend(uint16_t maxBits)
+{
+	if (maxBits == 0 || maxBits > _rmtBuffer.MaxUnitsToSend * _rmtBuffer.UnitSize)
+		return false;
+	_rmtBuffer.MaxBits = maxBits;
+	return true;
+}
 
 bool Rmt::SetBitsPerUnit(uint16_t unitSize)
 {
@@ -55,6 +63,7 @@ bool Rmt::SetBitsPerUnit(uint16_t unitSize)
 		"Unit Size is bigger than RMT BufferSize: %d > %d", unitSize, _rmtBuffer.BufferSize);
 	
 	_rmtBuffer.UnitSize = unitSize;
+	_rmtBuffer.MaxBits = _rmtBuffer.MaxUnitsToSend * _rmtBuffer.UnitSize;
 	return true;
 }
 
@@ -65,9 +74,11 @@ void IRAM_ATTR Rmt::doneOnChannel(rmt_channel_t channel, void * arg)
 	
 	if (rmtBuffer->Index < rmtBuffer->MaxUnitsToSend)
 	{
+		uint16_t bitsToSend  = rmtBuffer->MaxBits - (rmtBuffer->UnitSize * rmtBuffer->Index);
+		bitsToSend = std::min(rmtBuffer->UnitSize, bitsToSend);
 		ESP_ERROR_CHECK(rmt_write_items(channel, 
-						&rmtBuffer->Buffer[Hal::BitsPerLed * rmtBuffer->Index],
-						Hal::BitsPerLed, false));
+						&rmtBuffer->Buffer[rmtBuffer->UnitSize * rmtBuffer->Index],
+						bitsToSend, false));
 	}
 	else
 		xSemaphoreGive(rmtBuffer->Semaphore);
@@ -93,20 +104,30 @@ bool Rmt::UpdateBuffer(uint32_t *buffer, uint16_t length)
 {
 	if (length > _rmtBuffer.BufferSize)
 		return false;
-
+#ifdef DEBUG_rmt
+	printf("\n");
+#endif
 	for(uint16_t i = 0; i < length; i++)
 	{
-		uint32_t bits_to_send = buffer[i];
+		uint32_t bitsToSend = buffer[i];
 		uint32_t mask = 1 << (_rmtBuffer.UnitSize - 1);
+#ifdef DEBUG_rmt
+		printf("\nByte: %x\n", bitsToSend);
+#endif
 		for (uint32_t bit = 0; bit < _rmtBuffer.UnitSize; bit++)
 		{
-			uint32_t bit_is_set = bits_to_send & mask;
+			uint32_t isBitSet = bitsToSend & mask;
 
-			if (bit_is_set)
+			if (isBitSet)
 				_rmtBuffer.Buffer[i * _rmtBuffer.UnitSize + bit] = _timeOn;
 			else
 				_rmtBuffer.Buffer[i * _rmtBuffer.UnitSize + bit] = _timeOff;
-
+#ifdef DEBUG_rmt
+			if (isBitSet)
+				printf("1");
+			else
+				printf("0");
+#endif
 			mask >>= 1;
 		}
 	}

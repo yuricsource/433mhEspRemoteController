@@ -8,7 +8,9 @@ namespace Hal
 
 RfControl::RfControl(Gpio *IoPins, Rmt* rmt) : _gpio(IoPins), _rmt(rmt)
 {
+	memset(&_commands[0], 0, sizeof(_commands[0]));
 	_commands[0] = {0x22437856, 0xF3BA1FFB, 0x80000000};
+	// _commands[0] = {0x00000008, 0xFB1FBAF3, 0x56784322};
 }
 
 bool RfControl::SetCommand(RfCommandArray& command, const uint8_t commandId)
@@ -22,6 +24,8 @@ bool RfControl::SetCommand(RfCommandArray& command, const uint8_t commandId)
 
 bool RfControl::RunCommand(uint8_t commandId)
 {
+	
+	Dwt::DelayMilliseconds(12);
 	_rmt->SetProtocol(Rmt::ProtocolSupported::herculiftRemoteControl);
 	// first send the 12 pulses
 	_rmt->SetTimeBitOn(440, 500);
@@ -34,14 +38,15 @@ bool RfControl::RunCommand(uint8_t commandId)
 	_rmt->SetMaxUnitsToSend(1);
 	_rmt->UpdateBuffer(pulses, sizeof(pulses));
 	_rmt->Write(true);
-	Dwt::DelayMilliseconds(4);
+	Dwt::DelayMilliseconds(3);
 	_rmt->SetProtocol(Rmt::ProtocolSupported::herculiftRemoteControl);
 	
-	_rmt->SetBitsPerUnit(22);
+	_rmt->SetBitsPerUnit(32);
 	_rmt->SetMaxUnitsToSend(3);
+	_rmt->SetMaxBitsToSend(66);
 	uint32_t* commandBufferPointer = reinterpret_cast<uint32_t*>(_commands[commandId].data()); 
-	_rmt->UpdateBuffer(commandBufferPointer, 17);
-	_rmt->Write();
+	_rmt->UpdateBuffer(commandBufferPointer, 9);
+	_rmt->Write(true);
 	return true;
 }
 

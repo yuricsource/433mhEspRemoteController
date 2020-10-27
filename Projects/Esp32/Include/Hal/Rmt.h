@@ -68,6 +68,10 @@ public:
 
 		return true;
 	}
+
+	// @brief Set the maximum bit to be sent. This variable has to be the last setting to be set if the maximum bit doesn't mach 
+	// MaxUnitsToSend end BitsPerUnit
+	bool SetMaxBitsToSend(uint16_t maxBits);
 	
 	// @brief Set the period of bit 0. Ex.: |	Bit 1	|	timeHigh = 35 -> 400ns	|	timeLow = 15-> 850ns	|
 	inline bool SetTimeBitOff(const uint16_t timeHigh, const uint16_t timeLow)
@@ -141,6 +145,7 @@ public:
 	{
 		uint16_t Index = 0;
 		uint16_t MaxUnitsToSend = 0;
+		uint16_t MaxBits = 0;
 		uint16_t UnitSize = 0;
 		uint16_t BufferSize = 0;
 		xSemaphoreHandle Semaphore;
@@ -156,7 +161,7 @@ private:
 	rmt_item32_t ProtocolSupportedList [static_cast<uint8_t>(ProtocolSupported::MaxProtocolSupported)][2] = 
 	{
 		{{35, 1, 15, 0}, {15, 1, 35, 0}},
-		{{440, 1, 983, 0}, {920, 1, 505, 0}}
+		{{920, 1, 505, 0}, {440, 1, 983, 0}}
 	};
 
 	rmt_item32_t _timeOn = {{{T1H, 1, T1L, 0}}};

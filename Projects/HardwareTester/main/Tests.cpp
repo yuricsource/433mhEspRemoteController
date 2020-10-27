@@ -714,6 +714,25 @@ void TestLed()
 void TestTransmitter()
 {
 	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
+	Hardware::Instance()->GetRfControl().RunCommand(0);
 }
 
 void TestI2sClock()

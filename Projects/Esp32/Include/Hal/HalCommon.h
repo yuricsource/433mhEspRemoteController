@@ -296,7 +296,7 @@ static constexpr uint16_t MaxAddressableLeds = 256;
 using LedsArray = array<Led, MaxAddressableLeds>;
 //static_assert(sizeof(LedsArray) == 30, "Array has invalid size.");
 
-static constexpr uint16_t MaxRfCommand = 5;
+static constexpr uint16_t MaxRfCommand = 3;
 using RfCommandArray = array<uint32_t, MaxRfCommand>;
 
 static constexpr uint8_t MacAddressMaxLength = 6;

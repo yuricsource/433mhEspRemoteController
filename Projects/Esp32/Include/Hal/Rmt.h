@@ -10,6 +10,7 @@
 #include "driver/rmt.h"
 #include <array>
 #include "freertos/semphr.h"
+#include "DebugAssert.h"
 
 // These values are determined by measuring pulse timing with logic 
 // analyzer and adjusting to match datasheet. 
@@ -51,10 +52,10 @@ public:
 	// @brief Gpio flass pointer, Gpio pin, RMT Channel, Buffer Size (uint32_t)
 	Rmt(Gpio *IoPins, Gpio::GpioIndex transmitterPin, RmtChannel channel, uint16_t bufferSize, uint16_t unitSize = 1);
 	~Rmt();
-	void Write();
+	void Write(bool wait = false);
 	bool UpdateBuffer(uint32_t *buffer, uint16_t length);
 	bool SetMaxUnitsToSend(uint16_t maxUnits);
-	bool SetUnitSize(uint16_t unitSize);
+	bool SetBitsPerUnit(uint16_t unitSize);
 
 	// @brief Set the period of bit 1. Ex.: |	Bit 1	|	timeHigh = 15 -> 800ns	|	timeLow = 35-> 450ns	|
 	inline bool SetTimeBitOn(const uint16_t timeHigh, const uint16_t timeLow)
@@ -62,8 +63,8 @@ public:
 		if (timeHigh == 0 || timeLow == 0)
 			return false;
 
-		tOn.duration0 = timeHigh;
-		tOn.duration1 = timeLow;
+		_timeOn.duration0 = timeHigh;
+		_timeOn.duration1 = timeLow;
 
 		return true;
 	}
@@ -74,10 +75,66 @@ public:
 		if (timeHigh == 0 || timeLow == 0)
 			return false;
 
-		tOff.duration0 = timeHigh;
-		tOff.duration1 = timeLow;
+		_timeOff.duration0 = timeHigh;
+		_timeOff.duration1 = timeLow;
 		
 		return true;
+	}
+
+	enum class ProtocolSupported : uint8_t
+	{
+		WS2812B,
+		herculiftRemoteControl,
+		// Max Protol Supported
+		MaxProtocolSupported
+	};
+	
+	void SetProtocol(ProtocolSupported protocol)
+	{
+		uint8_t protocolIndex = static_cast<uint8_t>(protocol);
+		DebugAssertMessage(protocolIndex < static_cast<uint8_t>(ProtocolSupported::MaxProtocolSupported),
+			"Protocol not supported. Protocol Id: %d", protocolIndex);
+		
+		_timeOn = ProtocolSupportedList[protocolIndex][0];
+		_timeOff = ProtocolSupportedList[protocolIndex][1];
+
+		switch(protocol)
+		{
+			case ProtocolSupported::WS2812B:
+			{
+				rmt_config_t config;
+				config.rmt_mode = RMT_MODE_TX;
+				config.channel = static_cast<rmt_channel_t>(_rmtBuffer.Channel);
+				config.gpio_num = static_cast<gpio_num_t>(_transmitterPin);
+				config.mem_block_num = 3;
+				config.tx_config.loop_en = false;
+				config.tx_config.carrier_en = false;
+				config.tx_config.idle_output_en = true;
+				config.tx_config.idle_level = static_cast<rmt_idle_level_t>(0);
+				config.clk_div = 2;
+				ESP_ERROR_CHECK(rmt_config(&config));
+			}
+			break;
+			case  ProtocolSupported::herculiftRemoteControl:
+			{
+				rmt_config_t config;
+				config.rmt_mode = RMT_MODE_TX;
+				config.channel = static_cast<rmt_channel_t>(_rmtBuffer.Channel);
+				config.gpio_num = static_cast<gpio_num_t>(_transmitterPin);
+				config.mem_block_num = 3;
+				config.tx_config.loop_en = false;
+				config.tx_config.carrier_en = false;
+				config.tx_config.idle_output_en = true;
+				config.tx_config.idle_level = static_cast<rmt_idle_level_t>(0);
+				config.clk_div = 64;
+				ESP_ERROR_CHECK(rmt_config(&config));
+			}
+			break;
+
+			default:
+				break;
+		}
+
 	}
 
 	struct RmtBufferLed
@@ -95,8 +152,15 @@ private:
 	static void IRAM_ATTR doneOnChannel(rmt_channel_t channel, void * arg);
 	Gpio *_gpio;
 	Gpio::GpioIndex _transmitterPin;
-	rmt_item32_t tOn = {{{T1H, 1, T1L, 0}}};
-	rmt_item32_t tOff = {{{T0H, 1, T0L, 0}}};
+
+	rmt_item32_t ProtocolSupportedList [static_cast<uint8_t>(ProtocolSupported::MaxProtocolSupported)][2] = 
+	{
+		{{35, 1, 15, 0}, {15, 1, 35, 0}},
+		{{440, 1, 983, 0}, {920, 1, 505, 0}}
+	};
+
+	rmt_item32_t _timeOn = {{{T1H, 1, T1L, 0}}};
+	rmt_item32_t _timeOff = {{{T0H, 1, T0L, 0}}};
 };
 } // namespace Hal
 

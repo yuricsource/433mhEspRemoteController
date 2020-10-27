@@ -57,7 +57,7 @@ void executetMenu(char Test)
 		break;
 	case 'd':
 	case 'D':
-		TestLed();
+		TestTransmitter();
 		break;
 	case 'i':
 	case 'I':

@@ -2,7 +2,6 @@
 #include "HalCommon.h"
 #include "Rmt.h"
 #include "Dwt.h"
-#include "DebugAssert.h"
 
 namespace Hal
 {
@@ -29,7 +28,7 @@ Rmt::Rmt(Gpio *IoPins, Gpio::GpioIndex transmitterPin, RmtChannel channel, uint1
 	ESP_ERROR_CHECK(rmt_driver_install(config.channel, 0, 0));
 	_rmtBuffer.Semaphore = xSemaphoreCreateBinary();
 	_rmtBuffer.Channel = channel;
-	_rmtBuffer.MaxUnitsToSend = 0;
+	_rmtBuffer.MaxUnitsToSend = bufferSize / unitSize;
 	xSemaphoreGive(_rmtBuffer.Semaphore);
 }
 
@@ -47,10 +46,13 @@ bool Rmt::SetMaxUnitsToSend(uint16_t maxUnits)
 }
 
 
-bool Rmt::SetUnitSize(uint16_t unitSize)
+bool Rmt::SetBitsPerUnit(uint16_t unitSize)
 {
 	if (unitSize == 0)
 		return false;
+
+	DebugAssertMessage(unitSize <= _rmtBuffer.BufferSize,
+		"Unit Size is bigger than RMT BufferSize: %d > %d", unitSize, _rmtBuffer.BufferSize);
 	
 	_rmtBuffer.UnitSize = unitSize;
 	return true;
@@ -71,14 +73,20 @@ void IRAM_ATTR Rmt::doneOnChannel(rmt_channel_t channel, void * arg)
 		xSemaphoreGive(rmtBuffer->Semaphore);
 }
 
-void Rmt::Write()
+void Rmt::Write(bool wait)
 {
 	xSemaphoreTake(_rmtBuffer.Semaphore, portMAX_DELAY);
-	// Give a delay of 100 micro seconds to flush the last writing if there was
-	Dwt::DelayMicrosecond(100);
+	// Give a delay of 50 micro seconds to flush the last writing if there was
+	Dwt::DelayMicrosecond(50);
 	_rmtBuffer.Index = 0;
 	ESP_ERROR_CHECK(rmt_write_items(static_cast<rmt_channel_t>(_rmtBuffer.Channel), &_rmtBuffer.Buffer[0], _rmtBuffer.UnitSize, false));
 	rmt_register_tx_end_callback(doneOnChannel, &_rmtBuffer);
+
+	if (wait)
+	{
+		xSemaphoreTake(_rmtBuffer.Semaphore, portMAX_DELAY);
+		xSemaphoreGive(_rmtBuffer.Semaphore);
+	}
 }
 
 bool Rmt::UpdateBuffer(uint32_t *buffer, uint16_t length)
@@ -86,7 +94,7 @@ bool Rmt::UpdateBuffer(uint32_t *buffer, uint16_t length)
 	if (length > _rmtBuffer.BufferSize)
 		return false;
 
-	for(uint16_t i = 0; i <length; i++)
+	for(uint16_t i = 0; i < length; i++)
 	{
 		uint32_t bits_to_send = buffer[i];
 		uint32_t mask = 1 << (_rmtBuffer.UnitSize - 1);
@@ -95,9 +103,9 @@ bool Rmt::UpdateBuffer(uint32_t *buffer, uint16_t length)
 			uint32_t bit_is_set = bits_to_send & mask;
 
 			if (bit_is_set)
-				_rmtBuffer.Buffer[i * _rmtBuffer.UnitSize + bit] = tOn;
+				_rmtBuffer.Buffer[i * _rmtBuffer.UnitSize + bit] = _timeOn;
 			else
-				_rmtBuffer.Buffer[i * _rmtBuffer.UnitSize + bit] = tOff;
+				_rmtBuffer.Buffer[i * _rmtBuffer.UnitSize + bit] = _timeOff;
 
 			mask >>= 1;
 		}

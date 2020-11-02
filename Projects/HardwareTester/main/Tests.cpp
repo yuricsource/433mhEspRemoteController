@@ -3,6 +3,7 @@
 #include "esp_http_server.h"
 #include "CameraStreamTest.h"
 #include "ColorConverter.h"
+#include "LearnerCode.h"
 
 using Hal::Dwt;
 using Hal::Hardware;
@@ -11,6 +12,8 @@ using Hal::TimeLimit;
 using namespace std;
 
 const char *testPhrase = "RTC holds the memory with low power";
+LearnerCode* learnerTest = nullptr;
+// LearnerCode learnerTest(&Hardware::Instance()->GetGpio(), Hal::Gpio::GpioIndex::Gpio4,	&Hardware::Instance()->GetTimer0());
 
 #define PART_BOUNDARY "123456789000000000000987654321"
 static const char *_STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
@@ -537,6 +540,58 @@ void IoExtenderMenu()
 	}
 }
 
+void LearnCode()
+{
+	char test = 0;
+	if (learnerTest == nullptr)
+		learnerTest = new LearnerCode(&Hardware::Instance()->GetGpio(), Hal::Gpio::GpioIndex::Gpio4, &Hardware::Instance()->GetTimer0());
+	while (1)
+	{
+		switch (test)
+		{
+			case 'l':
+			case 'L':
+			{
+				learnerTest->Stop();
+				Hardware::Instance()->GetTimer0().SetTimer(16000);
+				learnerTest->Start();
+			}
+			break;
+			case 's':
+			case 'S':
+			{
+				learnerTest->Stop();
+				Hardware::Instance()->GetTimer0().Stop();
+			}
+			break;
+			case 'p':
+			case 'P':
+			{
+				learnerTest->PrintResult();
+			}
+			break;
+			case 'x':
+			case 'X':
+			{
+				return;
+			}
+			break;
+			default:
+				break;
+		}
+
+		printf("\n");
+		printf("Code Learner menu:\n");
+		printf("----------\n");
+		printf("[L] - Start Code Learner\n");
+		printf("[S] - Stop Code Learner\n");
+		printf("[P] - Print Code\n");
+		printf("[X] - Return\n");
+
+		test = ReadKey();
+	}	
+}
+
 void CameraMenu()
 {
 	char test = 0;
@@ -713,26 +768,8 @@ void TestLed()
 }
 void TestTransmitter()
 {
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
-	Hardware::Instance()->GetRfControl().RunCommand(0);
+	//for(uint8_t i = 0; i < 10; i++)
+		Hardware::Instance()->GetRfControl().RunCommand(0);
 }
 
 void TestI2sClock()

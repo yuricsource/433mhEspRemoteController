@@ -28,7 +28,6 @@ void executetMenu(char Test)
 
 	case 't':
 	case 'T':
-		//LedMenu();
 		TestLed();
 		break;
 	case 'r':
@@ -51,13 +50,17 @@ void executetMenu(char Test)
 	case 'W':
 		WifiMenu();
 		break;
-	case 'c':
-	case 'C':
-		CameraMenu();
-		break;
+	// case 'c':
+	// case 'C':
+	// 	CameraMenu();
+	// 	break;
 	case 'd':
 	case 'D':
 		TestTransmitter();
+		break;
+	case 'l':
+	case 'L':
+		LearnCode();
 		break;
 	case 'i':
 	case 'I':
@@ -70,14 +73,15 @@ void executetMenu(char Test)
 	printf("\n");
 	printf("Main menu:\n");
 	printf("----------\n");
-	printf("[T] - Led Test\n");
+	printf("[T] - Led Test (on pin 32)\n");
 	printf("[R] - Software Reset Test\n");
 	printf("[F] - Deep Sleep for 5 Seconds.\n");
 	printf("[S] - Test SPIFFS\n");
 	printf("[V] - Test SD Card\n");
 	printf("[W] - WiFi Menu\n");
-	printf("[C] - Camera Menu\n");
+	// printf("[C] - Camera Menu\n");
 	printf("[D] - Test controller transmitter\n");
+	printf("[L] - Learn RF remote control code\n");
 	printf("[I] - IO Extender menu\n");
 }
 

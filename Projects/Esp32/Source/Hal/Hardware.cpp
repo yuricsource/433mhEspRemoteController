@@ -75,9 +75,9 @@ Hardware::Hardware() :	_gpio(),
 	// _spiffs.Mount();
 	// _sdCard.Mount();
 	// i2s_write;
-	//_timer0.Initlialize();
-	// _timer0.AddCallback(this);
-	// _timer0.Start();
+	_timer0.Initlialize();
+	//_timer0.AddCallback(this);
+	_timer0.Start();
 }
 
 uint32_t Hardware::GetSystemClockBase()

@@ -84,7 +84,7 @@ namespace Hal
 		if (frequency == 0)
 			return;
 
-		this->Frequency = (frequency + frequency / 25) * 2;
+		this->Frequency = (frequency + frequency / 25);
 		interruptHandler->SetFrequency(this);
 	}
 

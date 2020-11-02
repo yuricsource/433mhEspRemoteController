@@ -2,12 +2,6 @@
 #ifndef TESTS_H_
 #define TESTS_H_
 
-
-
-
-
-
-
 #include <stdio.h>
 #include "esp_wifi.h"
 #include "esp_system.h"
@@ -93,6 +87,7 @@ static void websocket_event_handler(void *handler_args, esp_event_base_t base, i
 #include "stdio.h"
 #include "wchar.h"
 #include "Hardware.h"
+#include "LearnerCode.h"
 
 using Hal::Timer;
 using Hal::Hardware;
@@ -110,6 +105,7 @@ void TestI2sClock();
 void TestSdCard();
 void IoExtenderMenu();
 void TestTransmitter();
+void LearnCode();
 
 const char *GetTestPhrase();
 
@@ -118,19 +114,17 @@ class TestClass : Timer::Callback
 public:
     TestClass()
     {
-        // Hal::Hardware::Instance()->GetTimer0().AddCallback(this);
+        //Hal::Hardware::Instance()->GetTimer0().AddCallback(this);
         Hardware::Instance()->GetGpio().ConfigOutput(Hal::Gpio::GpioIndex::Gpio26,
             Hal::Gpio::OutputType::PullUp);
     }
     void TimerCallback() override
     {
        Hardware::Instance()->GetGpio().Set(Hal::Gpio::GpioIndex::Gpio26);
-       Hal::Dwt::DelayMilliseconds(40);
+       Hal::Dwt::DelayMicrosecond(1);
        Hardware::Instance()->GetGpio().Reset(Hal::Gpio::GpioIndex::Gpio26);
     }
 };
-
-
 
 static void websocket_app_start(void);
 #endif /* TESTS_H_ */

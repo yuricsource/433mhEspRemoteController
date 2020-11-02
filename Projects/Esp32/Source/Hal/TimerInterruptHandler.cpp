@@ -10,6 +10,7 @@
 #include "freertos/queue.h"
 #include "driver/periph_ctrl.h"
 #include "driver/timer.h"
+#include "DebugAssert.h"
 
 #define DEBUG_TIMER_INTERRUPTION
 
@@ -18,7 +19,6 @@ namespace Hal
 
 TimerInterruptHandler::TimerInterruptHandler()
 {
-
 	for (uint8_t i = 0; i < MaxTimerInterruptCount; i++)
 	{
 		callbackList[i] = nullptr;
@@ -55,6 +55,8 @@ bool TimerInterruptHandler::SetFrequency(TimerInterruptHandler::Callback *handle
 	{
 		TimerSelect timer = (handler->Preemption == Preemption::TIMER0) ? TimerSelect::Timer0 : TimerSelect::Timer1;
 
+		DebugAssertMessage(callbackList[static_cast<uint8_t>(timer)] != nullptr, "Timer %d Callback isn't initalized",
+			static_cast<uint8_t>(timer));
 		callbackList[static_cast<uint8_t>(timer)]->Frequency = handler->Frequency;
 	}
 	else

@@ -6,6 +6,14 @@
 		},
 		{
 			"path": "..\\Esp32"
+		},
+		{
+			"name": "test",
+			"path": "..\\..\\..\\..\\Users\\Yuri\\Documents\\PlatformIO\\Projects\\test"
+		},
+		{
+			"name": "201101-180715-espidf-blink",
+			"path": "..\\..\\..\\..\\Users\\Yuri\\Documents\\PlatformIO\\Projects\\201101-180715-espidf-blink"
 		}
 	],
 	"settings": {

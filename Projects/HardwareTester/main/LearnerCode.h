@@ -20,18 +20,6 @@ public:
         _gpio->ConfigInput(_pin);
     }
     
-    void Stop();
-
-    void Start();
-
-    void TimerCallback() override;
-
-    void PrintResult();
-    
-    // Sampling 16k per second => period of 62.5 us
-    static constexpr uint32_t SamplingFrequency = 16000; 
-
-private:
     enum class CodeLearnerState : uint8_t
     {
         None,
@@ -40,7 +28,25 @@ private:
         Finished
     };
 
-    static constexpr uint32_t MinimunBitsAllowed = 32;
+    void Stop();
+
+    void Start();
+
+    void TimerCallback() override;
+
+    void PrintResult();
+    void PrintCode();
+
+    CodeLearnerState GetState()
+    {
+        return _state;
+    }
+    
+    // Sampling 16k per second => period of 62.5 us
+    static constexpr uint32_t SamplingFrequency = 16000; 
+
+private:
+    static constexpr uint32_t MinimunBitsAllowed = 60;
     static constexpr uint32_t DelayLowInMiliseconds = 3;
     static constexpr float TOnLowInMiliseconds = 0.35;
     static constexpr float TOnHighInMiliseconds = 0.7;

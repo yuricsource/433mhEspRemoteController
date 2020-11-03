@@ -12,7 +12,7 @@
 #include "driver/timer.h"
 #include "DebugAssert.h"
 
-#define DEBUG_TIMER_INTERRUPTION
+// #define DEBUG_TIMER_INTERRUPTION
 
 namespace Hal
 {

@@ -570,6 +570,22 @@ void LearnCode()
 				learnerTest->PrintResult();
 			}
 			break;
+			case 'k':
+			case 'K':
+			{
+				while(true)
+				{
+					if (learnerTest->GetState() == LearnerCode::CodeLearnerState::Finished)
+					{
+						learnerTest->PrintCode();
+						learnerTest->Stop();
+						learnerTest->Start();
+						vTaskDelay(3000);
+					}
+					vTaskDelay(10);
+				}
+			}
+			break;
 			case 'x':
 			case 'X':
 			{
@@ -586,6 +602,7 @@ void LearnCode()
 		printf("[L] - Start Code Learner\n");
 		printf("[S] - Stop Code Learner\n");
 		printf("[P] - Print Code\n");
+		printf("[K] - Keep Printing Code\n");
 		printf("[X] - Return\n");
 
 		test = ReadKey();

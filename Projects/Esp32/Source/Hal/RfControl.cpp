@@ -3,6 +3,7 @@
 #include <string>
 #include <cstring>
 #include "Dwt.h"
+#include "Hardware.h"
 namespace Hal
 {
 
@@ -10,6 +11,8 @@ RfControl::RfControl(Gpio *IoPins, Rmt* rmt) : _gpio(IoPins), _rmt(rmt)
 {
 	memset(&_commands[0], 0, sizeof(_commands[0]));
 	_commands[0] = {0x22437856, 0xF3BA1FFB, 0x80000000};
+	_commands[1] = {0x38BBF977, 0x079B877B, 0x40000000};
+	_commands[2] = {0x1C1F7312, 0x079B877D, 0x40000000};
 	// _commands[0] = {0x00000008, 0xFB1FBAF3, 0x56784322};
 }
 
@@ -24,7 +27,10 @@ bool RfControl::SetCommand(RfCommandArray& command, const uint8_t commandId)
 
 bool RfControl::RunCommand(uint8_t commandId)
 {
+	RfCommandArray commandToSend = {};
 	
+	memcpy(commandToSend.data(), _commands[commandId].data(), sizeof(RfCommandArray));
+	commandToSend.data()[0] = Hardware::Instance()->GetRandomNumber();
 	Dwt::DelayMilliseconds(12);
 	_rmt->SetProtocol(Rmt::ProtocolSupported::herculiftRemoteControl);
 	// first send the 12 pulses
@@ -44,8 +50,8 @@ bool RfControl::RunCommand(uint8_t commandId)
 	_rmt->SetBitsPerUnit(32);
 	_rmt->SetMaxUnitsToSend(3);
 	_rmt->SetMaxBitsToSend(66);
-	uint32_t* commandBufferPointer = reinterpret_cast<uint32_t*>(_commands[commandId].data()); 
-	_rmt->UpdateBuffer(commandBufferPointer, 9);
+	uint32_t* commandBufferPointer = reinterpret_cast<uint32_t*>(commandToSend.data()); 
+	_rmt->UpdateBuffer(commandBufferPointer, 9); // how many bytes has to be sent
 	_rmt->Write(true);
 	return true;
 }

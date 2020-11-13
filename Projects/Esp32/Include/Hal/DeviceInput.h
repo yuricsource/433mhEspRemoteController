@@ -16,12 +16,13 @@ public:
 
 	enum class InputIndex : uint8_t
 	{
-		UserButton,
+		UserButtonEnter,
+		UserButtonReturn,
 	};
 
 	DeviceInput(Gpio *IoPins);
 	~DeviceInput();
-	bool GetInput(InputIndex input);
+	bool GetDigitalInput(InputIndex input);
 
 private:
 	Gpio *_gpio;

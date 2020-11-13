@@ -18,7 +18,7 @@ DeviceInput::~DeviceInput()
 {
 }
 
-bool DeviceInput::GetInput(InputIndex input)
+bool DeviceInput::GetDigitalInput(InputIndex input)
 {
 	return _gpio->Get(inputIndex[static_cast<uint8_t>(input)]);
 }

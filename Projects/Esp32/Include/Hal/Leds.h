@@ -16,7 +16,10 @@ class Leds : public Timer::Callback
 public:
 	enum class LedIndex : uint8_t
 	{
-		Blue
+		Red,
+		Orange,
+		Yellow,
+		Green
 	};
 
 	Leds(Gpio *IoPins, Timer* timer, Rmt* rmt);

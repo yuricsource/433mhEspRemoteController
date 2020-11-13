@@ -5,12 +5,19 @@
 namespace Hal
 {
 
-DeviceInput::DeviceInput(Gpio *IoPins) : _gpio(IoPins)
+DeviceInput::DeviceInput(Gpio* IoPins, Adc* adc) : _gpio(IoPins), _adc(adc)
 {
-	// Initializing all Inputs
-	for (auto &input : inputIndex)
+	// Initializing all Digital Inputs
+	for (auto &digital : digitalInputIndex)
 	{
-		_gpio->ConfigInput(input, Gpio::Pull::Up);
+		_gpio->ConfigInput(digital, Gpio::Pull::Up);
+	}
+
+	// Initializing all Analog Inputs
+	for (uint8_t i = 0; i < MaxAnalogInputs; i ++)
+	{
+		analogAdcIndex[i] = _adc->GetAdcIndexFromGpio(analogIndex[i]);
+		_adc->InitAdc(analogAdcIndex[i]);
 	}
 }
 
@@ -18,9 +25,14 @@ DeviceInput::~DeviceInput()
 {
 }
 
-bool DeviceInput::GetDigitalInput(InputIndex input)
+uint16_t DeviceInput::GetAnalogInput(AnalogInputIndex input, uint8_t averageSamples)
 {
-	return _gpio->Get(inputIndex[static_cast<uint8_t>(input)]);
+	return _adc->GetAdcValue(analogAdcIndex[static_cast<uint8_t>(input)], averageSamples);;
+}
+
+bool DeviceInput::GetDigitalInput(DigitalInputIndex input)
+{
+	return _gpio->Get(digitalInputIndex[static_cast<uint8_t>(input)]);
 }
 
 } // namespace Hal

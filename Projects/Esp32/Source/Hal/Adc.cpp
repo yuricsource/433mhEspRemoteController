@@ -93,6 +93,10 @@ Adc::AdcIndex Adc::GetAdcIndexFromGpio(Gpio::GpioIndex gpio)
 
 uint32_t Adc::GetAdcValue(AdcIndex adcIndex, uint16_t averageSamples)
 {
+
+	if (averageSamples == 0)
+		return 0;
+	
 	uint8_t channelSelected = 0;
 	AdcSelection adcSelection = AdcSelection::Adc1;
 

@@ -540,6 +540,101 @@ void IoExtenderMenu()
 	}
 }
 
+
+void ReadButtonAndAnalog()
+{
+	char test = 0;
+	while (1)
+	{
+		switch (test)
+		{
+			case 'l':
+			case 'L':
+			{
+				Hal::DeviceInput* device = &Hal::Hardware::Instance()->GetDeviceInput();
+				bool enterButton = device->GetDigitalInput(Hal::DeviceInput::DigitalInputIndex::UserButtonEnter);
+				bool returnButton = device->GetDigitalInput(Hal::DeviceInput::DigitalInputIndex::UserButtonReturn);
+				printf("Enter Button:\t%s\n", (!enterButton) ? "Pressed" : "Not Pressed");
+				printf("Return Button:\t%s\n", (!returnButton) ? "Pressed" : "Not Pressed");
+			}
+			break;
+			case 's':
+			case 'S':
+			{
+				Hal::DeviceInput* device = &Hal::Hardware::Instance()->GetDeviceInput();
+				uint32_t brightness = device->GetAnalogInput(Hal::DeviceInput::AnalogInputIndex::Brightness);
+				uint32_t color = device->GetAnalogInput(Hal::DeviceInput::AnalogInputIndex::Color);
+				printf("Color Value:\t%d\n", color);
+				printf("brightness Value:\t%d\n", brightness);
+			}
+			break;
+			case 'p':
+			case 'P':
+			{
+				Hal::DeviceInput* device = &Hal::Hardware::Instance()->GetDeviceInput();
+				bool enterButton = false;
+				bool returnButton = false;
+				uint32_t brightness = 0;
+				uint32_t color = 0;
+				while(true)
+				{
+					enterButton = device->GetDigitalInput(Hal::DeviceInput::DigitalInputIndex::UserButtonEnter);
+					returnButton = device->GetDigitalInput(Hal::DeviceInput::DigitalInputIndex::UserButtonReturn);
+					printf("Enter Button:\t%s\n", (!enterButton) ? "Pressed" : "Not Pressed");
+					printf("Return Button:\t%s\n", (!returnButton) ? "Pressed" : "Not Pressed");
+					brightness = device->GetAnalogInput(Hal::DeviceInput::AnalogInputIndex::Brightness);
+					color = device->GetAnalogInput(Hal::DeviceInput::AnalogInputIndex::Color);
+					printf("Color Value:\t%d\n", color);
+					printf("brightness Value:\t%d\n", brightness);
+					vTaskDelay(500);
+				}
+			}
+			break;
+			case 'r':
+			case 'R':
+			{
+				Hal::Led led = {};
+				led.Color.Red = 0xff /8;
+				led.Color.Blue = 0xff /3;
+				led.Color.Green = 0xff / 8;
+				Hardware::Instance()->GetLeds().SetLedsCount(256);
+				Hal::DeviceInput* device = &Hal::Hardware::Instance()->GetDeviceInput();
+				for(;;)
+				{
+					uint16_t color = device->GetAnalogInput(Hal::DeviceInput::AnalogInputIndex::Color, 100) / 12;
+					uint8_t brightness = device->GetAnalogInput(Hal::DeviceInput::AnalogInputIndex::Brightness, 100) / 16;
+					Hal::LedHsv hsv = {color, 255, brightness};
+					Utilities::ColorConverter::HsvToRgb(hsv, led);
+					for(uint16_t ledIndex = 0; ledIndex < 256; ledIndex++)
+							Hardware::Instance()->GetLeds().SetLedColor(ledIndex, led);
+					Hardware::Instance()->GetLeds().Refresh();
+					vTaskDelay(100);
+				}
+			}
+			break;
+			case 'x':
+			case 'X':
+			{
+				return;
+			}
+			break;
+			default:
+				break;
+		}
+
+		printf("\n");
+		printf("Code Learner menu:\n");
+		printf("----------\n");
+		printf("[L] - Read Analog\n");
+		printf("[S] - Read Buttons\n");
+		printf("[P] - Print Analogs and Buttons in a loop\n");
+		printf("[R] - Run Leds with Analogs\n");
+		printf("[X] - Return\n");
+
+		test = ReadKey();
+	}	
+}
+
 void LearnCode()
 {
 	char test = 0;
@@ -609,117 +704,6 @@ void LearnCode()
 	}	
 }
 
-void CameraMenu()
-{
-	char test = 0;
-
-	while (1)
-	{
-		switch (test)
-		{
-		case 's':
-		case 'S':
-		{
-			char mode = 0;
-			printf("\n\nSet the camera resolution:\n\n");
-			printf("[0] - QQVGA\t(160x120)\n");
-			printf("[1] - QVGA \t(320x240)\n");
-			printf("[2] - VGA  \t(640x480)\n");
-			printf("[3] - SVGA \t(800x600)\n");
-			printf("[4] - SXGA \t(1280x1024)\n");
-			printf("[5] - UXGA \t(1600x1200)\n");
-			mode = ReadKey();
-			if (mode == '0')
-			{
-			}
-			else if (mode == '3')
-			{
-				Hal::Hardware::Instance()->GetCamera().SetResolution(Hal::CameraFrameSize::CameraFrameSizeSVGA);
-			}
-			else if (mode == '4')
-			{
-				Hal::Hardware::Instance()->GetCamera().SetResolution(Hal::CameraFrameSize::CameraFrameSizeSXGA);
-			}
-			else if (mode == '5')
-			{
-				Hal::Hardware::Instance()->GetCamera().SetResolution(Hal::CameraFrameSize::CameraFrameSizeUXGA);
-			}
-			else
-				printf("Invalid option.\n");
-		}
-		break;
-		case 'i':
-		case 'I':
-		{
-			Hardware *system = Hal::Hardware::Instance();
-			system->GetCamera().SetResolution(Hal::CameraFrameSize::CameraFrameSizeSVGA);
-
-		}
-		break;
-		case 'w':
-		case 'W':
-		{
-			httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-			httpd_uri_t stream_uri =
-				{
-					.uri = "/stream",
-					.method = HTTP_GET,
-					.handler = stream_handler,
-					.user_ctx = NULL};
-			if (httpd_start(&web_stream_httpd, &config) == ESP_OK)
-			{
-				httpd_register_uri_handler(web_stream_httpd, &stream_uri);
-			}
-		}
-		break;
-		case 'h':
-		case 'H':
-		{
-			Hardware::Instance()->GetWifi().Disable();
-			Hardware::Instance()->GetWifi().SetSsid("Camera Wifi", strlen("Camera Wifi"));
-			Hardware::Instance()->GetWifi().SetPassword("123cam123", strlen("123cam123"));
-			Hardware::Instance()->GetWifi().SetMode(Hal::WifiModeConfiguration::HotSpot);
-			Hardware::Instance()->GetWifi().SetAuthentication(Hal::WifiAuthenticationMode::Wpa2Psk);
-			Hardware::Instance()->GetWifi().Enable();
-			Hardware::Instance()->GetCamera().Init();
-			startCameraServer();
-			break;
-		}
-		case 'x':
-		case 'X':
-		{
-			return;
-		}
-		break;
-		default:
-			break;
-		}
-
-		printf("\n");
-		printf("Camera menu:\n");
-		printf("----------\n");
-		printf("[S] - Camera Resolution\n");
-		//printf("[P] - Capture and Save in the internal Flash\n");
-		printf("[I] - Capture 10 images and Save in the SD Card\n");
-		printf("[W] - Start Simple Streaming Web\n");
-		printf("[H] - Start Demo Streaming Web\n");
-		printf("[X] - Return\n");
-
-		test = ReadKey();
-	}
-}
-
-static void spin_task(void *arg)
-{
-	printf("\nStarting Timer 1 with 5Hz\n");
-
-    while (1)
-	{
-		// Hardware::Instance()->GetLeds().Refresh();
-        vTaskDelay(100);
-    }
-}
-
 void TestLed()
 {
 	Hal::Led led = {};
@@ -760,28 +744,6 @@ void TestLed()
 		}
 
 	}
-
-	// if (startTimer)
-	// {
-	// 	// xTaskCreatePinnedToCore(spin_task, "stats", 4096, NULL, 3, NULL, 1);
-	// 	// printf("\nStarting Timer 0 with 5Hz\n");
-	// 	// Hardware::Instance()->GetTimer1().SetTimer(16000);
-	// 	// Hardware::Instance()->GetTimer1().Start();
-	// 	// Hardware::Instance()->GetTimer0().SetTimer(16000);
-	// 	// Hardware::Instance()->GetTimer0().Start();
-	// 	printf("\nStarting Timer 1 with 5Hz\n");
-	// 	for(;;)
-	// 	{
-	// 		// Hardware::Instance()->GetLeds().Refresh();
-	// 		vTaskDelay(100);
-	// 	}
-	// }
-	// else
-	// {
-	// 	printf("\nStoping Timer 0\n");
-	// 	//Hardware::Instance()->GetTimer1().Stop();
-	// }
-	// startTimer = !startTimer;
 }
 void TestTransmitter()
 {
@@ -789,28 +751,6 @@ void TestTransmitter()
 		Hardware::Instance()->GetRfControl().RunCommand(0);
 }
 
-void TestI2sClock()
-{
-	// Hal::Rmt::led_state new_state = {};
-	// new_state.Red = 0xff;
-
-	// Hardware::Instance()->GetRmt().Write(new_state);
-	// if(startI2s)
-	// {
-	// 	printf("\nStarting I2s at 25MHz\n");
-	// 	// Hardware::Instance()->GetI2s().Start(Hal::Gpio::GpioIndex::Gpio26);
-	// 	uint8_t buffer[100];
-		
-	// 	for(uint16_t i = 0; i < 100; i ++)
-	// 		buffer[i] = 0xAA;
-	// 	// Hardware::Instance()->GetI2s().Send(buffer, 100);
-	// }
-	// else
-	// {
-		
-	// }
-	// startI2s = !startI2s;	
-}
 
 static void get_string(char *line, size_t size)
 {

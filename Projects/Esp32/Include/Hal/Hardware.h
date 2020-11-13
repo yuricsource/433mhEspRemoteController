@@ -30,6 +30,7 @@
 #include "I2c.h"
 #include "IoExtender.h"
 #include "RfControl.h"
+#include "DeviceInput.h"
 
 namespace Hal
 {
@@ -58,6 +59,7 @@ public:
 	I2c &GetI2c() { return _i2c; }
 	IoExtender& GetIoExtender() { return _ioExtender; }
 	RfControl& GetRfControl() { return _rfControl; }
+	DeviceInput& GetDeviceInput() { return _deviceInput; }
 	uint32_t Milliseconds();
 	void TimerCallback();
 	ResetReason GetResetReason();
@@ -110,6 +112,7 @@ private:
 	I2c _i2c;
 	IoExtender _ioExtender;
 	RfControl _rfControl;
+	DeviceInput _deviceInput;
 };
 } // namespace Hal
 

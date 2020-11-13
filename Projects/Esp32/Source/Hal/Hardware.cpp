@@ -33,7 +33,8 @@ Hardware::Hardware() :	_gpio(),
 						_leds(&_gpio, &_timer0, &_rmtLeds),
 						_i2c(&_gpio, Hal::I2cPort::I2c0, Gpio::GpioIndex::Gpio4, Gpio::GpioIndex::Gpio27),
 						_ioExtender(&_gpio, &_i2c, Gpio::GpioIndex::Gpio32, 0x18),
-						_rfControl(&_gpio, &_rmtRemoteControl)
+						_rfControl(&_gpio, &_rmtRemoteControl),
+						_deviceInput(&_gpio, &_adc)
 {
 	esp_chip_info(&_mcuInfo);
 	esp_base_mac_addr_get(_macAdrress.data());

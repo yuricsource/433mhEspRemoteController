@@ -50,10 +50,6 @@ void executetMenu(char Test)
 	case 'W':
 		WifiMenu();
 		break;
-	// case 'c':
-	// case 'C':
-	// 	CameraMenu();
-	// 	break;
 	case 'd':
 	case 'D':
 		TestTransmitter();
@@ -65,6 +61,10 @@ void executetMenu(char Test)
 	case 'i':
 	case 'I':
 		IoExtenderMenu();
+		break;
+	case 'b':
+	case 'B':
+		ReadButtonAndAnalog();
 		break;
 	default:
 		break;
@@ -79,7 +79,7 @@ void executetMenu(char Test)
 	printf("[S] - Test SPIFFS\n");
 	printf("[V] - Test SD Card\n");
 	printf("[W] - WiFi Menu\n");
-	// printf("[C] - Camera Menu\n");
+	printf("[B] - Input Menu\n");
 	printf("[D] - Test controller transmitter\n");
 	printf("[L] - Learn RF remote control code\n");
 	printf("[I] - IO Extender menu\n");
@@ -90,9 +90,6 @@ extern "C" void app_main(void)
 	Hal::Hardware::Instance();
  	printf("Hardware Tester for ESP32\n");
 
-	//TestLed();
-	// Hal::Hardware::Instance()->GetCamera().Init();
-	// startCameraServer();
 	
 	TestClass testClass;
 	char test = 0;

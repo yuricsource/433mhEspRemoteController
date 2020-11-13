@@ -99,13 +99,13 @@ void WifiMenu();
 void LedMenu();
 char ReadKey();
 void ReadString(char * string, uint8_t size);
-void CameraMenu();
 void TestLed();
 void TestI2sClock();
 void TestSdCard();
 void IoExtenderMenu();
 void TestTransmitter();
 void LearnCode();
+void ReadButtonAndAnalog();
 
 const char *GetTestPhrase();
 

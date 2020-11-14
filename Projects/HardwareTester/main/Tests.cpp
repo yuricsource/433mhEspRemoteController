@@ -1,29 +1,15 @@
 
 #include "Tests.h"
-#include "esp_http_server.h"
-#include "CameraStreamTest.h"
 #include "ColorConverter.h"
 #include "LearnerCode.h"
+
+LearnerCode* learnerTest = nullptr;
 
 using Hal::Dwt;
 using Hal::Hardware;
 using Hal::TimeLimit;
 
 using namespace std;
-
-const char *testPhrase = "RTC holds the memory with low power";
-LearnerCode* learnerTest = nullptr;
-// LearnerCode learnerTest(&Hardware::Instance()->GetGpio(), Hal::Gpio::GpioIndex::Gpio4,	&Hardware::Instance()->GetTimer0());
-
-#define PART_BOUNDARY "123456789000000000000987654321"
-static const char *_STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
-static const char *_STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
-static const char *_STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
-httpd_handle_t web_stream_httpd = NULL;
-
-bool startTimer = true;
-bool startI2s = true;
-
 
 void rgb2hsv(const unsigned char &src_r, const unsigned char &src_g, const unsigned char &src_b, unsigned char &dst_h, unsigned char &dst_s, unsigned char &dst_v)
 {
@@ -97,96 +83,6 @@ void hsv2rgb(const uint16_t &src_h, const unsigned char &src_s, const unsigned c
     dst_r = static_cast<unsigned char>(r * 255); // dst_r : 0-255
     dst_g = (unsigned char)(g * 255); // dst_r : 0-255
     dst_b = (unsigned char)(b * 255); // dst_r : 0-255
-}
-
-
-static esp_err_t stream_handler(httpd_req_t *req)
-{
-	camera_fb_t *fb = NULL;
-	esp_err_t res = ESP_OK;
-	size_t _jpg_buf_len = 0;
-	uint8_t *_jpg_buf = NULL;
-	char *part_buf[64];
-
-	static int64_t last_frame = 0;
-	if (!last_frame)
-	{
-		last_frame = esp_timer_get_time();
-	}
-
-	res = httpd_resp_set_type(req, _STREAM_CONTENT_TYPE);
-	if (res != ESP_OK)
-	{
-		return res;
-	}
-
-	httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-
-	while (true)
-	{
-		fb = esp_camera_fb_get();
-		if (!fb)
-		{
-			printf("Camera capture failed");
-			res = ESP_FAIL;
-		}
-		else
-		{
-			if (fb->format != PIXFORMAT_JPEG)
-			{
-				bool jpeg_converted = frame2jpg(fb, 80, &_jpg_buf, &_jpg_buf_len);
-				esp_camera_fb_return(fb);
-				fb = NULL;
-				if (!jpeg_converted)
-				{
-					printf("JPEG compression failed");
-					res = ESP_FAIL;
-				}
-			}
-			else
-			{
-				_jpg_buf_len = fb->len;
-				_jpg_buf = fb->buf;
-			}
-		}
-		if (res == ESP_OK)
-		{
-			size_t hlen = snprintf((char *)part_buf, 64, _STREAM_PART, _jpg_buf_len);
-			res = httpd_resp_send_chunk(req, (const char *)part_buf, hlen);
-		}
-		if (res == ESP_OK)
-		{
-			res = httpd_resp_send_chunk(req, (const char *)_jpg_buf, _jpg_buf_len);
-		}
-		if (res == ESP_OK)
-		{
-			res = httpd_resp_send_chunk(req, _STREAM_BOUNDARY, strlen(_STREAM_BOUNDARY));
-		}
-		if (fb)
-		{
-			esp_camera_fb_return(fb);
-			fb = NULL;
-			_jpg_buf = NULL;
-		}
-		else if (_jpg_buf)
-		{
-			free(_jpg_buf);
-			_jpg_buf = NULL;
-		}
-		if (res != ESP_OK)
-		{
-			break;
-		}
-		// int64_t fr_end = esp_timer_get_time();
-	}
-
-	last_frame = 0;
-	return res;
-}
-
-const char *GetTestPhrase()
-{
-	return testPhrase;
 }
 
 
@@ -409,13 +305,6 @@ void WifiMenu()
 			Hardware::Instance()->GetWifi().Disable();
 		}
 		break;
-		case 'W':
-		case 'w':
-		{
-			printf("Testing Websocket.\n");
-			websocket_app_start();
-			break;;
-		}
 		case 'x':
 		case 'X':
 		{
@@ -435,7 +324,6 @@ void WifiMenu()
 		printf("[C] - Set WiFi Channel\n");
 		printf("[T] - Start Wifi\n");
 		printf("[Z] - Stop Wifi\n");
-		printf("[W] - Test Websocket\n");
 		printf("[X] - Return\n");
 
 		test = ReadKey();
@@ -751,67 +639,3 @@ void TestTransmitter()
 		Hardware::Instance()->GetRfControl().RunCommand(0);
 }
 
-
-static void get_string(char *line, size_t size)
-{
-    int count = 0;
-    while (count < size) {
-        int c = fgetc(stdin);
-        if (c == '\n') {
-            line[count] = '\0';
-            break;
-        } else if (c > 0 && c < 127) {
-            line[count] = c;
-            ++count;
-        }
-        vTaskDelay(10 / portTICK_PERIOD_MS);
-    }
-}
-
-static void websocket_app_start(void)
-{
-    esp_websocket_client_config_t websocket_cfg = {};
-
-    shutdown_signal_timer = xTimerCreate("Websocket shutdown timer", NO_DATA_TIMEOUT_SEC * 1000 / portTICK_PERIOD_MS,
-                                         pdFALSE, NULL, shutdown_signaler);
-    shutdown_sema = xSemaphoreCreateBinary();
-
-#if 0
-    char line[128];
-
-    printf("Please enter uri of websocket endpoint");
-    ReadString(line, sizeof(line));
-
-    websocket_cfg.uri = line;
-    printf( "Endpoint uri: %s\n", line);
-
-#else
-    websocket_cfg.uri = "ws://10.1.1.101";
-	websocket_cfg.path = "/socket.io/?EIO=3&transport=websocket";
-    websocket_cfg.port = 3000;
-
-#endif /* CONFIG_WEBSOCKET_URI_FROM_STDIN */
-
-    printf("Connecting to %s...\n", websocket_cfg.uri);
-
-    esp_websocket_client_handle_t client = esp_websocket_client_init(&websocket_cfg);
-    esp_websocket_register_events(client, WEBSOCKET_EVENT_ANY, websocket_event_handler, (void *)client);
-
-    esp_websocket_client_start(client);
-    xTimerStart(shutdown_signal_timer, portMAX_DELAY);
-    char data[32];
-    int i = 0;
-    while (i < 10) {
-        if (esp_websocket_client_is_connected(client)) {
-            int len = sprintf(data, "42[\"chat\",\"Test%d\"]", i++);
-            printf("Sending %s\n", data);
-            esp_websocket_client_send_text(client, data, len, portMAX_DELAY);
-        }
-        vTaskDelay(1000 / portTICK_RATE_MS);
-    }
-
-    xSemaphoreTake(shutdown_sema, portMAX_DELAY);
-    esp_websocket_client_stop(client);
-    printf("Websocket Stopped\n");
-    esp_websocket_client_destroy(client);
-}

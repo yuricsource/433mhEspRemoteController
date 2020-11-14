@@ -18,7 +18,6 @@
 #include "Tests.h"
 #include "Rng.h"
 #include "esp_http_server.h"
-#include "CameraStreamTest.h"
 #include <cstring>
 
 void executetMenu(char Test)

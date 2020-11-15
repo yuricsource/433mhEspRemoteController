@@ -1,11 +1,15 @@
 #ifndef _ADAFRUIT_GFX_H
 #define _ADAFRUIT_GFX_H
 
+
+#include "Hardware.h"
+#include "../ArduinoPort/ArduinoPort.h"
+
 #if ARDUINO >= 100
 #include "Arduino.h"
 #include "Print.h"
 #else
-#include "WProgram.h"
+#include "../ArduinoPort/WProgram.h"
 #endif
 #include "gfxfont.h"
 
@@ -171,11 +175,7 @@ public:
   void cp437(boolean x = true) { _cp437 = x; }
 
   using Print::write;
-#if ARDUINO >= 100
   virtual size_t write(uint8_t);
-#else
-  virtual void write(uint8_t);
-#endif
 
   /************************************************************************/
   /*!

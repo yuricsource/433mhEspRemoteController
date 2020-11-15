@@ -24,10 +24,10 @@
                 "${workspaceFolder}/../Esp32/Include/Utils",
                 "${workspaceFolder}/../Esp32/Include/Configuration",
                 "${workspaceFolder}/../Esp32/Include/Application/",
+                "${workspaceFolder}/../Esp32/Libraries/**",
                 "${workspaceFolder}/../Esp32/Libraries/freertos-addons/Source/include",
                 "${env:IDF_TOOLS}/**",
-                "${env:IDF_PATH}/components/**",
-                "C:/YuriCode/433mhEspRemoteController/Projects/Esp32/Include/Hal/Camera/Driver"
+                "${env:IDF_PATH}/components/**"
             ],
             "defines": [],
             "cStandard": "c11",

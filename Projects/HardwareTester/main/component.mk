@@ -21,7 +21,8 @@ COMPONENT_SRCDIRS           +=  ../../Esp32/Source/Hal                          
                                 ../../Esp32/Libraries/freertos-addons/Source               \
                                 ../../Esp32/Libraries/JsonParser                           \
                                 ../../Esp32/Libraries/Arduino/Adafruit-GFX                 \
-                                ../../Esp32/Libraries/Arduino/ArduinoPort
+                                ../../Esp32/Libraries/Arduino/ArduinoPort                  \
+                                ../../Esp32/Libraries/Arduino/Adafruit_SSD1306
 
 COMPONENT_ADD_INCLUDEDIRS   +=  ${IDF_PATH}/components/                                    \
                                 ../../Esp32/Include/Hal                                    \
@@ -37,4 +38,5 @@ COMPONENT_ADD_INCLUDEDIRS   +=  ${IDF_PATH}/components/                         
                                 ../../Esp32/Libraries/freertos-addons/Source/include       \
                                 ../../Esp32/Libraries/JsonParser                           \
                                 ../../Esp32/Libraries/Arduino/Adafruit-GFX                 \
-                                ../../Esp32/Libraries/Arduino/ArduinoPort
+                                ../../Esp32/Libraries/Arduino/ArduinoPort                  \
+                                ../../Esp32/Libraries/Arduino/Adafruit_SSD1306

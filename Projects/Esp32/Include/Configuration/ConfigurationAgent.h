@@ -5,7 +5,6 @@
 #include "ConfigurationCommon.h"
 #include "HalCommon.h"
 #include "BoardConfiguration.h"
-#include "CameraConfiguration.h"
 
 namespace Configuration
 {
@@ -28,7 +27,6 @@ public:
     }
 
     BoardConfiguration *GetBoardConfiguration() {return &_boardConfiguration;}
-    CameraConfiguration *GetCameraConfiguration() {return &_cameraConfiguration;}
 
     void DefaulAllConfigurations();
     void UseDefaultConfiguration();
@@ -37,7 +35,6 @@ private:
 
 static ConfigurationAgent *_configurations;
 BoardConfiguration _boardConfiguration = {};
-CameraConfiguration _cameraConfiguration = {};
 
 private:
     /// @brief	Hide Copy constructor.

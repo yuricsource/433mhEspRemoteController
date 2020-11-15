@@ -17,14 +17,15 @@
 #include "Hardware.h"
 #include "Tests.h"
 #include "Rng.h"
-#include "esp_http_server.h"
 #include <cstring>
+
+#include "Adafruit_GFX.h"
+#include "Adafruit_SSD1306.h"
 
 void executetMenu(char Test)
 {
 	switch (Test)
 	{
-
 	case 't':
 	case 'T':
 		TestLed();
@@ -72,7 +73,7 @@ void executetMenu(char Test)
 	printf("\n");
 	printf("Main menu:\n");
 	printf("----------\n");
-	printf("[T] - Led Test (on pin 32)\n");
+	printf("[T] - Led Test \n");
 	printf("[R] - Software Reset Test\n");
 	printf("[F] - Deep Sleep for 5 Seconds.\n");
 	printf("[S] - Test SPIFFS\n");
@@ -81,7 +82,7 @@ void executetMenu(char Test)
 	printf("[B] - Input Menu\n");
 	printf("[D] - Test controller transmitter\n");
 	printf("[L] - Learn RF remote control code\n");
-	printf("[I] - IO Extender menu\n");
+	printf("[I] - Test I2C display\n");
 }
 
 extern "C" void app_main(void)
@@ -93,14 +94,17 @@ extern "C" void app_main(void)
 	TestClass testClass;
 	char test = 0;
 	
-	/*
-	Hal::Hardware::Instance()->GetWifi().Disable();
-	Hal::Hardware::Instance()->GetWifi().SetSsid("Yuri_Duda", strlen("Yuri_Duda"));
-	Hal::Hardware::Instance()->GetWifi().SetPassword("Australia2us", strlen("Australia2us"));
-	Hal::Hardware::Instance()->GetWifi().SetMode(Hal::WifiModeConfiguration::Client);
-	Hal::Hardware::Instance()->GetWifi().SetAuthentication(Hal::WifiAuthenticationMode::Wpa2Psk);
-	Hal::Hardware::Instance()->GetWifi().Enable();
-	*/
+	// Set Wifi Network
+	// Hal::Hardware::Instance()->GetWifi().Disable();
+	// Hal::Hardware::Instance()->GetWifi().SetSsid("Yuri_Duda", strlen("Yuri_Duda"));
+	// Hal::Hardware::Instance()->GetWifi().SetPassword("Australia2us", strlen("Australia2us"));
+	// Hal::Hardware::Instance()->GetWifi().SetMode(Hal::WifiModeConfiguration::Client);
+	// Hal::Hardware::Instance()->GetWifi().SetAuthentication(Hal::WifiAuthenticationMode::Wpa2Psk);
+	// Hal::Hardware::Instance()->GetWifi().Enable();
+	#define OLED_RESET 4
+	//Adafruit_SSD1306 display(OLED_RESET);
+	//display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+	//display.clearDisplay();
 	while (1)
 	{
 		executetMenu(test);

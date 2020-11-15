@@ -9,6 +9,7 @@
 #define MAIN_LIBRARIES_ARDUINOPORT_H_
 
 #include "HalCommon.h"
+#include "Gpio.h"
 #include "Hardware.h"
 #include "Base64.h"
 
@@ -22,16 +23,16 @@ uint8_t pgm_read_byte (T address)
 
 // System Port
 
-#define ARDUINO						104
+#define ARDUINO						99
 
 #define LOW							false
 #define HIGH						true
 #define LSBFIRST 					0
 #define MSBFIRST 					1
 #define millis						Hal::Hardware::Instance()->Milliseconds
-#define digitalWrite(pin, state) 	Hal::Hardware::Instance()->GetGpio().Set(static_cast<Hal::Gpio::GpioIndex>(pin), state)
-#define pinMode(pin, mode)			Hal::Hardware::Instance()->GetGpio().ArduinoPinMode(pin,mode)
-#define digitalRead(pin)			Hal::Hardware::Instance()->GetGpio().Get(static_cast<Hal::Gpio::GpioIndex>(pin))
+#define digitalWrite(pin, state) 	//Hal::Hardware::Instance()->GetGpio().Set(static_cast<Hal::Gpio::GpioIndex>(pin), state)
+#define pinMode(pin, mode)			//Hal::Hardware::Instance()->GetGpio().ArduinoPinMode(static_cast<int>(pin),mode)
+#define digitalRead(pin)			false//Hal::Hardware::Instance()->GetGpio().Get(static_cast<Hal::Gpio::GpioIndex>(pin))
 #define delay(millis)				vTaskDelay(millis / portTICK_PERIOD_MS)
 
 // SPI Port

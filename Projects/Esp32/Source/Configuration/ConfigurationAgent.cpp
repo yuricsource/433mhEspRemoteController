@@ -25,16 +25,12 @@ ConfigurationAgent::~ConfigurationAgent()
 void ConfigurationAgent::UseDefaultConfiguration()
 {
     _boardConfiguration.DefaultConfiguration();
-    _cameraConfiguration.DefaultConfiguration();
     Applications::ApplicationAgent::Instance()->GetWifi().ConfigurationUpdated();
 }
 
 void ConfigurationAgent::DefaulAllConfigurations()
 {
     _boardConfiguration.DefaultConfiguration();
-    _cameraConfiguration.DefaultConfiguration();
-    
-    // Save afterwards
 }
 
 } // namespace Configuration

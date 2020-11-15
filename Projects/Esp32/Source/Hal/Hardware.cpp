@@ -17,7 +17,6 @@ Hardware::Hardware() :	_gpio(),
 						_adc(&_gpio),
 						_debugPort(&_gpio, UartPort::Uart0, 115200, Gpio::GpioIndex::Gpio3, Gpio::GpioIndex::Gpio1),
 						_spiffs(),
-						_camera(&_gpio),
 						_rng(),
 						_wifiDriver(),
 						_flash(),
@@ -26,12 +25,12 @@ Hardware::Hardware() :	_gpio(),
 						_timerInterruptHandler(),
 						_timer0(&_timerInterruptHandler, TimerSelect::Timer0),
 						_timer1(&_timerInterruptHandler, TimerSelect::Timer1),
-						_dac(&_gpio, Gpio::GpioIndex::Gpio25),
+						_dac(&_gpio, Gpio::GpioIndex::Gpio26),
 						_sdCard(&_gpio, Gpio::GpioIndex::Gpio23, Gpio::GpioIndex::Gpio19, Gpio::GpioIndex::Gpio22, Gpio::GpioIndex::Gpio21),
 						_rmtLeds(&_gpio, Gpio::GpioIndex::Gpio16, RmtChannel::RmtChannel1, Hal::BitsPerLed * Hal::MaxAddressableLeds, Hal::BitsPerLed),
 						_rmtRemoteControl(&_gpio, Gpio::GpioIndex::Gpio4, RmtChannel::RmtChannel0, Hal::BitsPerLed * Hal::MaxAddressableLeds, Hal::BitsPerLed),
 						_leds(&_gpio, &_timer0, &_rmtLeds),
-						_i2c(&_gpio, Hal::I2cPort::I2c0, Gpio::GpioIndex::Gpio4, Gpio::GpioIndex::Gpio27),
+						_i2c(&_gpio, Hal::I2cPort::I2c0, Gpio::GpioIndex::Gpio25, Gpio::GpioIndex::Gpio14),
 						_ioExtender(&_gpio, &_i2c, Gpio::GpioIndex::Gpio32, 0x18),
 						_rfControl(&_gpio, &_rmtRemoteControl),
 						_deviceInput(&_gpio, &_adc)
@@ -70,7 +69,7 @@ Hardware::Hardware() :	_gpio(),
 		printf("!!! Error: Only one instance of System can be created !!!\n");
 
 #ifdef HARDWARE_TESTER
-//	_i2c.ScanDevices();
+	_i2c.ScanDevices();
 //	_ioExtender.Refresh(true);
 #endif
 	// _spiffs.Mount();

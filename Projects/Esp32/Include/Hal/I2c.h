@@ -27,6 +27,16 @@ public:
 	uint8_t Receive();
 	void ScanDevices();
 
+	bool write(uint8_t byte)
+	{
+		return Send(byte);
+	}
+	
+	bool begin(uint8_t byte)
+	{
+		return BeginTransmission(byte);
+	}
+
 private:
 	static constexpr uint32_t DefaultFrequency = 100000;
 	static constexpr bool AckCheck = true;

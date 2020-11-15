@@ -2,6 +2,8 @@
 #include "Tests.h"
 #include "ColorConverter.h"
 #include "LearnerCode.h"
+#include "Adafruit_GFX.h"
+#include "Adafruit_SSD1306.h"
 
 LearnerCode* learnerTest = nullptr;
 
@@ -369,6 +371,11 @@ void LedMenu()
 
 		test = ReadKey();
 	}
+}
+
+void TestI2cDisplay()
+{
+
 }
 
 void IoExtenderMenu()

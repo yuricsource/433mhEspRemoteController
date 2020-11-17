@@ -32,10 +32,6 @@
 // (NEW CODE SHOULD IGNORE THIS, USE THE CONSTRUCTORS THAT ACCEPT WIDTH
 // AND HEIGHT ARGUMENTS).
 
-#if defined(ARDUINO_STM32_FEATHER)
-typedef class HardwareSPI SPIClass;
-#endif
-
 #include "Hardware.h"
 #include "../ArduinoPort/ArduinoPort.h"
 #include "../Adafruit-GFX/Adafruit_GFX.h"
@@ -132,7 +128,7 @@ public:
                    uint32_t clkAfter = 100000UL);
   Adafruit_SSD1306(uint8_t w, uint8_t h, int8_t mosi_pin, int8_t sclk_pin,
                    int8_t dc_pin, int8_t rst_pin, int8_t cs_pin);
-  Adafruit_SSD1306(uint8_t w, uint8_t h, SPIClass *spi, int8_t dc_pin,
+  Adafruit_SSD1306(uint8_t w, uint8_t h, Hal::Spi *spi, int8_t dc_pin,
                    int8_t rst_pin, int8_t cs_pin, uint32_t bitrate = 8000000UL);
 
   // DEPRECATED CONSTRUCTORS - for back compatibility, avoid in new projects
@@ -168,7 +164,7 @@ private:
   void ssd1306_command1(uint8_t c);
   void ssd1306_commandList(const uint8_t *c, uint16_t n, uint8_t emptyByte = 0);
 
-  SPIClass *spi;
+  Hal::Spi *spi;
   Hal::I2c *wire;
   uint8_t *buffer;
   int8_t i2caddr, vccstate, page_end;

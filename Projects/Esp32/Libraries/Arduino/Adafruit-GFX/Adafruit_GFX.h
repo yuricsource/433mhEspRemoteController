@@ -2,8 +2,8 @@
 #define _ADAFRUIT_GFX_H
 
 
-#include "Hardware.h"
-#include "../ArduinoPort/ArduinoPort.h"
+// #include "Hardware.h"
+// #include "../ArduinoPort/ArduinoPort.h"
 
 #if ARDUINO >= 100
 #include "Arduino.h"

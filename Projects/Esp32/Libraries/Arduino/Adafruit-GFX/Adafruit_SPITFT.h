@@ -24,6 +24,7 @@
 
 #include "Adafruit_GFX.h"
 #include <SPI.h>
+#include "../ArduinoPort/ArduinoPort.h"
 
 // HARDWARE CONFIG ---------------------------------------------------------
 

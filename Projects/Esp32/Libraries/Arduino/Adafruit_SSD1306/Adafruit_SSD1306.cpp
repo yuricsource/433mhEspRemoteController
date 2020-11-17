@@ -50,7 +50,7 @@
 #elif defined(SERIAL_BUFFER_SIZE)
 #define WIRE_MAX (SERIAL_BUFFER_SIZE - 1) ///< Newer Wire uses RingBuffer
 #else
-#define WIRE_MAX 128 ///< Use common Arduino core default
+#define WIRE_MAX 32 ///< Use common Arduino core default
 #endif
 
 #define ssd1306_swap(a, b) \
@@ -104,28 +104,12 @@
   if (wire)                  \
   {                          \
     SETWIRECLOCK;            \
-  }                          \
-  else                       \
-  {                          \
-    if (spi)                 \
-    {                        \
-      SPI_TRANSACTION_START; \
-    }                        \
-    SSD1306_SELECT;          \
-  } ///< Wire, SPI or bitbang transfer setup
+  }                          
 #define TRANSACTION_END    \
   if (wire)                \
   {                        \
     RESWIRECLOCK;          \
-  }                        \
-  else                     \
-  {                        \
-    SSD1306_DESELECT;      \
-    if (spi)               \
-    {                      \
-      SPI_TRANSACTION_END; \
-    }                      \
-  } ///< Wire, SPI or bitbang transfer end
+  }                        
 
 // CONSTRUCTORS, DESTRUCTOR ------------------------------------------------
 

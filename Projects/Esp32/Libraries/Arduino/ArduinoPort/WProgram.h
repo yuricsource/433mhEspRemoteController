@@ -14,10 +14,11 @@
 #ifndef _WPROGRAM_H_
 #define _WPROGRAM_H_
 
-#include "ArduinoPort.h"
-#include "string.h"
+// #include "ArduinoPort.h"
 #include "esp_types.h"
 #include "freertos/FreeRTOS.h"
+#include <cstring>
+#include <string>
 
 #define abs(x) ((x) < 0 ? -(x) : (x))
 

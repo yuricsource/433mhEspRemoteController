@@ -375,7 +375,57 @@ void LedMenu()
 
 void TestI2cDisplay()
 {
+	// display.display();
+	// delay(2000); // Pause for 2 seconds
 
+	// // Clear the buffer
+	// display.clearDisplay();
+
+	// // Draw a single pixel in white
+	// display.drawPixel(10, 10, WHITE);
+
+	// // Show the display buffer on the screen. You MUST call display() after
+	// // drawing commands to make them visible on screen!
+	// display.display();
+	// delay(2000);
+	// // display.display() is NOT necessary after every single drawing command,
+	// // unless that's what you want...rather, you can batch up a bunch of
+	// // drawing operations and then update the screen all at once by calling
+	// // display.display(). These examples demonstrate both approaches...
+
+	// testdrawline();      // Draw many lines
+
+	// testdrawrect();      // Draw rectangles (outlines)
+
+	// testfillrect();      // Draw rectangles (filled)
+
+	// testdrawcircle();    // Draw circles (outlines)
+
+	// testfillcircle();    // Draw circles (filled)
+
+	// testdrawroundrect(); // Draw rounded rectangles (outlines)
+
+	// testfillroundrect(); // Draw rounded rectangles (filled)
+
+	// testdrawtriangle();  // Draw triangles (outlines)
+
+	// testfilltriangle();  // Draw triangles (filled)
+
+	// testdrawchar();      // Draw characters of the default font
+
+	// testdrawstyles();    // Draw 'stylized' characters
+
+	// testscrolltext();    // Draw scrolling text
+
+	// testdrawbitmap();    // Draw a small bitmap image
+
+	// // Invert and restore display, pausing in-between
+	// display.invertDisplay(true);
+	// delay(1000);
+	// display.invertDisplay(false);
+	// delay(1000);
+
+	// testanimate(logo_bmp, LOGO_WIDTH, LOGO_HEIGHT); // Animate bitmaps
 }
 
 void IoExtenderMenu()

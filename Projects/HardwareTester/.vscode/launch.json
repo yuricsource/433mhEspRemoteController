@@ -5,11 +5,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "preLaunchTask": "RunOpenocd", // The name of the task defined above
+      // "preLaunchTask": "RunOpenocd", // The name of the task defined above
       "name": "ESP32 OpenOCD",
       "type": "cppdbg",
       "request": "launch",
-      "miDebuggerPath": "xtensa-esp32-elf-gdb",
+      "miDebuggerPath": "${workspaceFolder}/Debug/xtensa-esp32-elf-gdb.exe",
       "cwd": "${workspaceFolder}/build",
       //change the name of the elf file as required
       "program": "${workspaceFolder}/build/app-template.elf",
@@ -22,7 +22,7 @@
         {
           // there's a bug in vs code that prevents us from using ${workspaceFolder} variable.
           // update the path as needed
-          "text": "file 'C:\\YuriCode\\433mhEspRemoteController\\Projects\\HardwareTester\\build\\app-template.elf'"
+          "text": "file 'C:/YuriCode/433mhEspRemoteController/Projects/HardwareTester/build/app-template.elf'"
         },
         {
           "text": "target remote 127.0.0.1:3333"

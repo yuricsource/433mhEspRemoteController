@@ -30,10 +30,11 @@ Hardware::Hardware() :	_gpio(),
 						_rmtLeds(&_gpio, Gpio::GpioIndex::Gpio16, RmtChannel::RmtChannel1, Hal::BitsPerLed * Hal::MaxAddressableLeds, Hal::BitsPerLed),
 						_rmtRemoteControl(&_gpio, Gpio::GpioIndex::Gpio4, RmtChannel::RmtChannel0, Hal::BitsPerLed * Hal::MaxAddressableLeds, Hal::BitsPerLed),
 						_leds(&_gpio, &_timer0, &_rmtLeds),
-						_i2c(&_gpio, Hal::I2cPort::I2c0, Gpio::GpioIndex::Gpio25, Gpio::GpioIndex::Gpio14),
+						_i2c(&_gpio, Hal::I2cPort::I2c0, Gpio::GpioIndex::Gpio21, Gpio::GpioIndex::Gpio22),
 						_ioExtender(&_gpio, &_i2c, Gpio::GpioIndex::Gpio32, 0x18),
 						_rfControl(&_gpio, &_rmtRemoteControl),
-						_deviceInput(&_gpio, &_adc)
+						_deviceInput(&_gpio, &_adc)//,
+						// _display(SSD1306_LCDWIDTH, SSD1306_LCDHEIGHT, &_i2c)
 {
 	esp_chip_info(&_mcuInfo);
 	esp_base_mac_addr_get(_macAdrress.data());
@@ -78,6 +79,9 @@ Hardware::Hardware() :	_gpio(),
 	_timer0.Initlialize();
 	//_timer0.AddCallback(this);
 	_timer0.Start();
+
+	// _display.begin(SSD1306_SWITCHCAPVCC, 0x3C, false, false);
+	// _display.clearDisplay();
 }
 
 uint32_t Hardware::GetSystemClockBase()

@@ -44,7 +44,7 @@ void IoExtenderMenu();
 void TestTransmitter();
 void LearnCode();
 void ReadButtonAndAnalog();
-void I2CDisplay();
+void TestI2cDisplay();
 
 class TestClass : Timer::Callback
 {

@@ -31,6 +31,10 @@
 #include "RfControl.h"
 #include "DeviceInput.h"
 
+
+// #include "Adafruit_GFX.h"
+// #include "Adafruit_SSD1306.h"
+
 namespace Hal
 {
 
@@ -58,6 +62,7 @@ public:
 	IoExtender& GetIoExtender() { return _ioExtender; }
 	RfControl& GetRfControl() { return _rfControl; }
 	DeviceInput& GetDeviceInput() { return _deviceInput; }
+	// Adafruit_SSD1306& GetDisplay() { return _display; }
 	uint32_t Milliseconds();
 	void TimerCallback();
 	ResetReason GetResetReason();
@@ -110,6 +115,7 @@ private:
 	IoExtender _ioExtender;
 	RfControl _rfControl;
 	DeviceInput _deviceInput;
+	// Adafruit_SSD1306 _display;
 };
 } // namespace Hal
 

@@ -174,8 +174,8 @@ public:
   /**********************************************************************/
   void cp437(boolean x = true) { _cp437 = x; }
 
-  using Print::write;
-  virtual size_t write(uint8_t);
+  // using Print::write;
+  size_t write(uint8_t);
 
   /************************************************************************/
   /*!

@@ -106,7 +106,9 @@
 			"xloctime": "c",
 			"xiosbase": "c",
 			"xstring": "cpp",
-			"xutility": "cpp"
+			"xutility": "cpp",
+			"xhash": "cpp",
+			"xtree": "cpp"
 		},
 		"git.ignoreLimitWarning": true
 	}

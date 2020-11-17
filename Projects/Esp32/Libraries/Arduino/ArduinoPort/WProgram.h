@@ -20,13 +20,7 @@
 #include "freertos/FreeRTOS.h"
 
 #define abs(x) ((x) < 0 ? -(x) : (x))
-#define swap(x, y)                \
-    do                            \
-    {                             \
-        typeof(x) temp##x##y = x; \
-        x = y;                    \
-        y = temp##x##y;           \
-    } while (0)
+
 
 typedef bool boolean;
 // typedef char __FlashStringHelper;
@@ -42,14 +36,14 @@ class Print
 public:
     void print(char *s);
     //virtual size_t write(uint8_t) = 0;
-    virtual size_t write(unsigned char const*, unsigned int) = 0;
-    size_t write(const char *str)
-    {
-        if(str == NULL) {
-            return 0;
-        }
-        return write((const uint8_t *) str, strlen(str));
-    }
+    // virtual size_t write(unsigned char const*, unsigned int) = 0;
+    // size_t write(const char *str)
+    // {
+    //     if(str == NULL) {
+    //         return 0;
+    //     }
+    //     return write((const uint8_t *) str, strlen(str));
+    // }
     
     // size_t write(const char *buffer, size_t size)
     // {

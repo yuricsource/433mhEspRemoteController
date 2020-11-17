@@ -40,7 +40,6 @@ typedef class HardwareSPI SPIClass;
 #include "../ArduinoPort/ArduinoPort.h"
 #include "../Adafruit-GFX/Adafruit_GFX.h"
 #include <SPI.h>
-#include "../ArduinoPort/ArduinoPort.h"
 
 #if defined(__AVR__)
 typedef volatile uint8_t PortReg;
@@ -128,7 +127,7 @@ typedef uint32_t PortMask;
 class Adafruit_SSD1306 : public Adafruit_GFX {
 public:
   // NEW CONSTRUCTORS -- recommended for new projects
-  Adafruit_SSD1306(uint8_t w, uint8_t h, Hal::I2c *twi = &Wire,
+  Adafruit_SSD1306(uint8_t w, uint8_t h, Hal::I2c *twi,
                    int8_t rst_pin = -1, uint32_t clkDuring = 400000UL,
                    uint32_t clkAfter = 100000UL);
   Adafruit_SSD1306(uint8_t w, uint8_t h, int8_t mosi_pin, int8_t sclk_pin,
@@ -167,7 +166,7 @@ private:
   void drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color);
   void drawFastVLineInternal(int16_t x, int16_t y, int16_t h, uint16_t color);
   void ssd1306_command1(uint8_t c);
-  void ssd1306_commandList(const uint8_t *c, uint8_t n);
+  void ssd1306_commandList(const uint8_t *c, uint16_t n, uint8_t emptyByte = 0);
 
   SPIClass *spi;
   Hal::I2c *wire;

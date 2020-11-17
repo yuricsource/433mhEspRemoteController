@@ -60,7 +60,7 @@ void executetMenu(char Test)
 		break;
 	case 'i':
 	case 'I':
-		IoExtenderMenu();
+		TestI2cDisplay();
 		break;
 	case 'b':
 	case 'B':
@@ -102,30 +102,12 @@ extern "C" void app_main(void)
 	// Hal::Hardware::Instance()->GetWifi().SetAuthentication(Hal::WifiAuthenticationMode::Wpa2Psk);
 	// Hal::Hardware::Instance()->GetWifi().Enable();
 
-	Hal::I2c* i2c = &Hal::Hardware::Instance()->GetI2c();
-	
-	Adafruit_SSD1306* display = new Adafruit_SSD1306(SSD1306_LCDWIDTH, SSD1306_LCDHEIGHT, i2c);
-	display->begin(SSD1306_SWITCHCAPVCC, 0x3C, false, false);
-	display->clearDisplay();
-
-	display->setTextSize(1);
-	display->setTextColor(WHITE);
-	display->setCursor(0,0);
-	display->write(' ');
-	display->write(' ');
-	display->write(' ');
-	display->write(' ');
-	display->write(' ');
-	display->write(' ');
-	display->write(' ');
-	display->write(' ');
-	display->write('Y');
-	display->write('u');
-	display->write('r');
-	display->write('i');
-	display->write(' ');
-	display->write('R');
-	display->display();
+	Hal::Hardware::Instance()->GetDisplay().write(' ');
+	Hal::Hardware::Instance()->GetDisplay().write('H');
+	Hal::Hardware::Instance()->GetDisplay().write('A');
+	Hal::Hardware::Instance()->GetDisplay().write('R');
+	Hal::Hardware::Instance()->GetDisplay().write('D');
+	Hal::Hardware::Instance()->GetDisplay().display();
 	
 	while (1)
 	{

@@ -108,7 +108,17 @@
 			"xstring": "cpp",
 			"xutility": "cpp",
 			"xhash": "cpp",
-			"xtree": "cpp"
+			"xtree": "cpp",
+			"compare": "cpp",
+			"concepts": "cpp",
+			"ios": "cpp",
+			"queue": "cpp",
+			"shared_mutex": "cpp",
+			"xfacet": "cpp",
+			"xlocinfo": "cpp",
+			"xmemory": "cpp",
+			"xstddef": "cpp",
+			"xtr1common": "cpp"
 		},
 		"git.ignoreLimitWarning": true
 	}

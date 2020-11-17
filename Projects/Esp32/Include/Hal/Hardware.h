@@ -67,6 +67,7 @@ public:
 	void TimerCallback();
 	ResetReason GetResetReason();
 	void SoftwareReset();
+	int GetRandomNumberRange(int from = 0, int to = 0);
 	uint32_t GetRandomNumber();
 	uint32_t GetSystemClockBase();
 	uint32_t GetHeapSize();

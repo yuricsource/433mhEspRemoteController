@@ -50,7 +50,7 @@
 #elif defined(SERIAL_BUFFER_SIZE)
 #define WIRE_MAX (SERIAL_BUFFER_SIZE - 1) ///< Newer Wire uses RingBuffer
 #else
-#define WIRE_MAX 32 ///< Use common Arduino core default
+#define WIRE_MAX 128 ///< Use common Arduino core default
 #endif
 
 #define ssd1306_swap(a, b) \
@@ -1014,7 +1014,7 @@ void Adafruit_SSD1306::display(void)
   // 32-byte transfer condition below.
   yield();
 #endif
-  uint16_t count = (WIDTH * (HEIGHT + 7)) / 8;
+  uint16_t count = WIDTH * ((HEIGHT + 7) / 8);
   // printf("WIDTH: %d, HEIGHT: %d\n", WIDTH, HEIGHT);
   // printf("Total count: %d\n", count);
   uint8_t *ptr = buffer;

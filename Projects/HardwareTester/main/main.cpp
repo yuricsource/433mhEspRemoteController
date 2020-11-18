@@ -102,11 +102,27 @@ extern "C" void app_main(void)
 	// Hal::Hardware::Instance()->GetWifi().SetAuthentication(Hal::WifiAuthenticationMode::Wpa2Psk);
 	// Hal::Hardware::Instance()->GetWifi().Enable();
 
+	Hal::Hardware::Instance()->GetDisplay().setTextSize(1);
+	Hal::Hardware::Instance()->GetDisplay().setTextColor(WHITE);
+	Hal::Hardware::Instance()->GetDisplay().setCursor(0,0);
+	Hal::Hardware::Instance()->GetDisplay().write(' ');
+	Hal::Hardware::Instance()->GetDisplay().write(' ');
 	Hal::Hardware::Instance()->GetDisplay().write(' ');
 	Hal::Hardware::Instance()->GetDisplay().write('H');
-	Hal::Hardware::Instance()->GetDisplay().write('A');
-	Hal::Hardware::Instance()->GetDisplay().write('R');
-	Hal::Hardware::Instance()->GetDisplay().write('D');
+	Hal::Hardware::Instance()->GetDisplay().write('a');
+	Hal::Hardware::Instance()->GetDisplay().write('r');
+	Hal::Hardware::Instance()->GetDisplay().write('d');
+	Hal::Hardware::Instance()->GetDisplay().write('w');
+	Hal::Hardware::Instance()->GetDisplay().write('a');
+	Hal::Hardware::Instance()->GetDisplay().write('r');
+	Hal::Hardware::Instance()->GetDisplay().write('e');
+	Hal::Hardware::Instance()->GetDisplay().write(' ');
+	Hal::Hardware::Instance()->GetDisplay().write('T');
+	Hal::Hardware::Instance()->GetDisplay().write('e');
+	Hal::Hardware::Instance()->GetDisplay().write('s');
+	Hal::Hardware::Instance()->GetDisplay().write('t');
+	Hal::Hardware::Instance()->GetDisplay().write('e');
+	Hal::Hardware::Instance()->GetDisplay().write('r');
 	Hal::Hardware::Instance()->GetDisplay().display();
 	
 	while (1)

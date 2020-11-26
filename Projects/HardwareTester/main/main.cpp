@@ -28,7 +28,8 @@ void executetMenu(char Test)
 	{
 	case 't':
 	case 'T':
-		TestLed();
+		//TestLed();
+		LedMenu();
 		break;
 	case 'r':
 	case 'R':
@@ -73,7 +74,7 @@ void executetMenu(char Test)
 	printf("\n");
 	printf("Main menu:\n");
 	printf("----------\n");
-	printf("[T] - Led Test \n");
+	printf("[T] - Led Menu \n");
 	printf("[R] - Software Reset Test\n");
 	printf("[F] - Deep Sleep for 5 Seconds.\n");
 	printf("[S] - Test SPIFFS\n");
@@ -105,24 +106,6 @@ extern "C" void app_main(void)
 	Hal::Hardware::Instance()->GetDisplay().setTextSize(1);
 	Hal::Hardware::Instance()->GetDisplay().setTextColor(WHITE);
 	Hal::Hardware::Instance()->GetDisplay().setCursor(0,0);
-	// Hal::Hardware::Instance()->GetDisplay().write(' ');
-	// Hal::Hardware::Instance()->GetDisplay().write(' ');
-	// Hal::Hardware::Instance()->GetDisplay().write(' ');
-	// Hal::Hardware::Instance()->GetDisplay().write('H');
-	// Hal::Hardware::Instance()->GetDisplay().write('a');
-	// Hal::Hardware::Instance()->GetDisplay().write('r');
-	// Hal::Hardware::Instance()->GetDisplay().write('d');
-	// Hal::Hardware::Instance()->GetDisplay().write('w');
-	// Hal::Hardware::Instance()->GetDisplay().write('a');
-	// Hal::Hardware::Instance()->GetDisplay().write('r');
-	// Hal::Hardware::Instance()->GetDisplay().write('e');
-	// Hal::Hardware::Instance()->GetDisplay().write(' ');
-	// Hal::Hardware::Instance()->GetDisplay().write('T');
-	// Hal::Hardware::Instance()->GetDisplay().write('e');
-	// Hal::Hardware::Instance()->GetDisplay().write('s');
-	// Hal::Hardware::Instance()->GetDisplay().write('t');
-	// Hal::Hardware::Instance()->GetDisplay().write('e');
-	// Hal::Hardware::Instance()->GetDisplay().write('r');
 	Hal::Hardware::Instance()->GetDisplay().print("   Hardware Tester\n   Display Test\nVersion :%d.%d", 2, 1);
 	Hal::Hardware::Instance()->GetDisplay().display();
 	

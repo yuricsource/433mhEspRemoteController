@@ -343,13 +343,51 @@ void LedMenu()
 		case 'q':
 		case 'Q':
 		{
-			//Hardware::Instance()->GetLeds().SetLed(Hal::Leds::LedIndex::Blue);
+			Hardware::Instance()->GetLeds().SetIndicatorLed(Hal::Leds::LedIndex::Green);
 		}
 		break;
+		case 'w':
+		case 'W':
+		{
+			Hardware::Instance()->GetLeds().SetIndicatorLed(Hal::Leds::LedIndex::Yellow);
+		}
+		case 'e':
+		case 'E':
+		{
+			Hardware::Instance()->GetLeds().SetIndicatorLed(Hal::Leds::LedIndex::Orange);
+		}
+		break;
+		case 'r':
+		case 'R':
+		{
+			Hardware::Instance()->GetLeds().SetIndicatorLed(Hal::Leds::LedIndex::Red);
+		}
 		case 'a':
 		case 'A':
 		{
-			//Hardware::Instance()->GetLeds().ResetLed(Hal::Leds::LedIndex::Blue);
+			Hardware::Instance()->GetLeds().ResetIndicatorLed(Hal::Leds::LedIndex::Green);
+		}
+		break;
+		case 's':
+		case 'S':
+		{
+			Hardware::Instance()->GetLeds().ResetIndicatorLed(Hal::Leds::LedIndex::Yellow);
+		}
+		case 'd':
+		case 'D':
+		{
+			Hardware::Instance()->GetLeds().ResetIndicatorLed(Hal::Leds::LedIndex::Orange);
+		}
+		break;
+		case 'f':
+		case 'F':
+		{
+			Hardware::Instance()->GetLeds().ResetIndicatorLed(Hal::Leds::LedIndex::Red);
+		}
+		case 't':
+		case 'T':
+		{
+			TestLed();
 		}
 		break;
 		case 'x':
@@ -365,9 +403,17 @@ void LedMenu()
 		printf("\n");
 		printf("Led menu:\n");
 		printf("----------\n");
-		printf("[Q] - Turn Blue On\n");
-		printf("[A] - Turn Blue Off\n");
+		printf("[Q] - Turn Green On\n");
+		printf("[A] - Turn Green Off\n");
+		printf("[W] - Turn Yellow On\n");
+		printf("[S] - Turn Yellow Off\n");
+		printf("[E] - Turn Orange On\n");
+		printf("[D] - Turn Orange Off\n");
+		printf("[R] - Turn Red On\n");
+		printf("[F] - Turn Red Off\n");
+		printf("[T] - Test Leds Array\n");
 		printf("[X] - Return\n");
+		printf("Obs.: gpio 35, 34, 39, 36 can only be input\n");
 
 		test = ReadKey();
 	}

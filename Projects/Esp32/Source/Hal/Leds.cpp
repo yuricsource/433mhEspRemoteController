@@ -10,7 +10,21 @@ namespace Hal
 Leds::Leds(Gpio *IoPins, Timer* timer, Rmt* rmt) : _gpio(IoPins), _timer(timer), _rmt(rmt),
 														_maxLeds(Hal::MaxAddressableLeds)
 {
-	
+	for (uint8_t i = 0; i < LedIndicatorsCount; i++)
+	{
+		_gpio->SetMode(LedIndicatorPin[i], Gpio::Mode::OutputOpenDrain);
+		_gpio->Reset(LedIndicatorPin[i]);
+	}
+}
+
+void Leds::SetIndicatorLed(LedIndex led)
+{
+	_gpio->Set(LedIndicatorPin[static_cast<uint8_t>(led)]);
+}
+
+void Leds::ResetIndicatorLed(LedIndex led)
+{
+	_gpio->Reset(LedIndicatorPin[static_cast<uint8_t>(led)]);
 }
 
 void Leds::TimerCallback()

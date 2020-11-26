@@ -30,11 +30,23 @@ public:
 	void ResetAllLeds();
 	void Refresh();
 	bool SetLedsCount(uint16_t ledIndex);
+	void SetIndicatorLed(LedIndex led);
+	void ResetIndicatorLed(LedIndex led);
 private:
 
 	static constexpr uint16_t MaxLeds = MaxAddressableLeds;
 	static constexpr uint16_t BytesPerColor = 3;
 	static constexpr uint8_t LedColors = 3;
+	static constexpr uint8_t LedIndicatorsCount = 4;
+
+	Gpio::GpioIndex LedIndicatorPin[LedIndicatorsCount] =
+	{
+		Gpio::GpioIndex::Gpio35, // Led Red
+		Gpio::GpioIndex::Gpio34, // Led Orange
+		Gpio::GpioIndex::Gpio39, // Led Yellow
+		Gpio::GpioIndex::Gpio36, // Led Green
+	};
+
 
 	void TimerCallback() override;
 

@@ -737,6 +737,37 @@ void TestLed()
 
 	}
 }
+
+void RainbowLedTest()
+{
+	Hal::Led led = {};
+	led.Color.Red = 0xff /8;
+	led.Color.Blue = 0xff /3;
+	led.Color.Green = 0xff / 8;
+	Hardware::Instance()->GetLeds().SetLedsCount(256);
+	
+	for(;;)
+	{
+		for(uint16_t color = 0; color <= 360; color++)
+		 {
+
+			for(uint16_t ledIndex = 0; ledIndex < 256; ledIndex++)
+			{
+				uint16_t a = (color + ledIndex) % 360;
+				Hal::LedHsv hsv = {a, 255, 255};
+				hsv.Color.Value = 64;
+				hsv.Color.Saturation = 255;
+				Utilities::ColorConverter::HsvToRgb(hsv, led);
+				Hardware::Instance()->GetLeds().SetLedColor(ledIndex, led);
+			}
+			Hardware::Instance()->GetLeds().Refresh();
+			// vTaskDelay(1);
+			//printf("i = %d -> R=%d, G=%d, B=%d\n", i, led.Color.Red, led.Color.Blue, led.Color.Blue);
+		}
+		 
+	}
+}
+
 void TestTransmitter()
 {
 	//for(uint8_t i = 0; i < 10; i++)

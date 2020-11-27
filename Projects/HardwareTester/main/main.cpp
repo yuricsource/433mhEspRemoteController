@@ -28,7 +28,7 @@ void executetMenu(char Test)
 	{
 	case 't':
 	case 'T':
-		//TestLed();
+		TestLed();
 		LedMenu();
 		break;
 	case 'r':
@@ -91,18 +91,10 @@ extern "C" void app_main(void)
 	Hal::Hardware::Instance();
  	printf("Hardware Tester for ESP32\n");
 
-	
+	RainbowLedTest();
 	TestClass testClass;
 	char test = 0;
 	
-	// Set Wifi Network
-	// Hal::Hardware::Instance()->GetWifi().Disable();
-	// Hal::Hardware::Instance()->GetWifi().SetSsid("Yuri_Duda", strlen("Yuri_Duda"));
-	// Hal::Hardware::Instance()->GetWifi().SetPassword("Australia2us", strlen("Australia2us"));
-	// Hal::Hardware::Instance()->GetWifi().SetMode(Hal::WifiModeConfiguration::Client);
-	// Hal::Hardware::Instance()->GetWifi().SetAuthentication(Hal::WifiAuthenticationMode::Wpa2Psk);
-	// Hal::Hardware::Instance()->GetWifi().Enable();
-
 	Hal::Hardware::Instance()->GetDisplay().setTextSize(1);
 	Hal::Hardware::Instance()->GetDisplay().setTextColor(WHITE);
 	Hal::Hardware::Instance()->GetDisplay().setCursor(0,0);

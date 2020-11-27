@@ -44,6 +44,7 @@ void IoExtenderMenu();
 void TestTransmitter();
 void LearnCode();
 void ReadButtonAndAnalog();
+void RainbowLedTest();
 
 class TestClass : Timer::Callback
 {

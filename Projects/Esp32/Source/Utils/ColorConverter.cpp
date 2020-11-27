@@ -86,8 +86,8 @@ void ColorConverter::HsvToRgb(const uint16_t &src_h, const unsigned char &src_s,
     }
 
     dst_r = static_cast<unsigned char>(r * 255); // dst_r : 0-255
-    dst_g = (unsigned char)(g * 255); // dst_r : 0-255
-    dst_b = (unsigned char)(b * 255); // dst_r : 0-255
+    dst_g = static_cast<unsigned char>(g * 255); // dst_r : 0-255
+    dst_b = static_cast<unsigned char>(b * 255); // dst_r : 0-255
 }
 
 

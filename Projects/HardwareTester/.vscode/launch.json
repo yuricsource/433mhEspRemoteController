@@ -28,7 +28,7 @@
           "text": "target remote 127.0.0.1:3333"
         },
         {
-          "text": "set remote hardware-watchpoint-limit 8"
+          "text": "set remote hardware-watchpoint-limit 2"
         },
         {
           "text": "monitor reset halt"

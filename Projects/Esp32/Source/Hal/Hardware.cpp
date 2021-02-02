@@ -27,7 +27,7 @@ Hardware::Hardware() :	_gpio(),
 						_timer1(&_timerInterruptHandler, TimerSelect::Timer1),
 						_dac(&_gpio, Gpio::GpioIndex::Gpio26),
 						_sdCard(&_gpio, Gpio::GpioIndex::Gpio23, Gpio::GpioIndex::Gpio19, Gpio::GpioIndex::Gpio22, Gpio::GpioIndex::Gpio21),
-						_rmtLeds(&_gpio, Gpio::GpioIndex::Gpio16, RmtChannel::RmtChannel1, Hal::BitsPerLed * Hal::MaxAddressableLeds, Hal::BitsPerLed),
+						_rmtLeds(&_gpio, Gpio::GpioIndex::Gpio27, RmtChannel::RmtChannel1, Hal::BitsPerLed * Hal::MaxAddressableLeds, Hal::BitsPerLed),
 						_rmtRemoteControl(&_gpio, Gpio::GpioIndex::Gpio4, RmtChannel::RmtChannel0, Hal::BitsPerLed * Hal::MaxAddressableLeds, Hal::BitsPerLed),
 						_leds(&_gpio, &_timer0, &_rmtLeds),
 						_i2c(&_gpio, Hal::I2cPort::I2c0, Gpio::GpioIndex::Gpio25, Gpio::GpioIndex::Gpio14),
@@ -80,9 +80,15 @@ Hardware::Hardware() :	_gpio(),
 	//_timer0.AddCallback(this);
 	_timer0.Start();
 
+
+	// initializing display
 	_display.begin(SSD1306_SWITCHCAPVCC, 0x3C, false, false);
 	_display.clearDisplay();
+	_display.setTextSize(2);
+	_display.setTextColor(WHITE);
+	_display.setCursor(0,0);
 	_display.display();
+
 }
 
 uint32_t Hardware::GetSystemClockBase()

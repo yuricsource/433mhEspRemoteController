@@ -15,6 +15,10 @@ using Hal::Led;
 		ColorConverter();
 		~ColorConverter();
 
+		static constexpr uint8_t MaxSaturation = 255;
+		static constexpr uint8_t MaxHue = 255;
+		static constexpr uint8_t MaxValue = 255;
+
 		static void RgbToHsv(const unsigned char &src_r, const unsigned char &src_g, const unsigned char &src_b,
 													uint16_t &dst_h, unsigned char &dst_s, unsigned char &dst_v);
 

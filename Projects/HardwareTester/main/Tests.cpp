@@ -4,6 +4,7 @@
 #include "LearnerCode.h"
 #include "Adafruit_GFX.h"
 #include "Adafruit_SSD1306.h"
+#include "HalCommon.h"
 
 LearnerCode* learnerTest = nullptr;
 
@@ -419,7 +420,7 @@ void LedMenu()
 	}
 }
 
-void TestI2cDisplay()
+void AdafruitLibDisplayTest ()
 {
 	Adafruit_SSD1306& display = Hal::Hardware::Instance()->GetDisplay();
 	display.display();
@@ -473,6 +474,70 @@ void TestI2cDisplay()
 	delay(1000);
 
 	testanimate(logo_bmp, LOGO_WIDTH, LOGO_HEIGHT); // Animate bitmaps
+}
+
+void TestI2cDisplay()
+{
+	char test = 0;
+	while (1)
+	{
+		switch (test)
+		{
+			case 'a':
+			case 'A':
+			{
+				AdafruitLibDisplayTest();
+			}
+			break;
+			case 'c':
+			case 'C':
+			{
+				uint8_t countdownCounter = 5;
+				TimeLimit timeTlimit = {};
+				for(uint8_t counter = countdownCounter; counter > countdownCounter; counter--)
+				{
+					uint16_t color = Hardware::Instance()->GetRng().GetNumber() % 361;
+					Hal::LedHsv hsv = {color, Utilities::ColorConverter::MaxSaturation, Utilities::ColorConverter::MaxValue};
+					Hal::Led led = {};
+
+					while (timeTlimit.IsTimeUp(1000) == false)
+					{
+						for (uint16_t i = 0; i < 256; i++)
+							{
+								hsv.Color.Value = i;
+								hsv.Color.Saturation = Utilities::ColorConverter::MaxSaturation;
+								Utilities::ColorConverter::HsvToRgb(hsv, led);
+								for(uint16_t ledIndex = 0; ledIndex < Hal::MaxAddressableLeds; ledIndex++)
+									Hardware::Instance()->GetLeds().SetLedColor(ledIndex, led);
+								Hardware::Instance()->GetLeds().Refresh();
+								if (i != 0 && i % 26)
+									vTaskDelay((50 / i));
+							}
+					}
+
+					timeTlimit.Reset();
+				}
+			}
+			break;
+			case 'x':
+			case 'X':
+			{
+				return;
+			}
+			break;
+			default:
+				break;
+		}
+
+		printf("\n");
+		printf("I2C Display Tests:\n");
+		printf("----------\n");
+		printf("[L] - Adafruit Library Tests\n");
+		printf("[S] - Countdown Test\n");
+		printf("[X] - Return\n");
+
+		test = ReadKey();
+	}	
 }
 
 void IoExtenderMenu()
@@ -750,7 +815,6 @@ void RainbowLedTest()
 	{
 		for(uint16_t color = 0; color <= 360; color++)
 		 {
-
 			for(uint16_t ledIndex = 0; ledIndex < 256; ledIndex++)
 			{
 				uint16_t a = (color + ledIndex) % 360;

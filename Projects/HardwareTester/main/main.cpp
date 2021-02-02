@@ -91,16 +91,9 @@ extern "C" void app_main(void)
 	Hal::Hardware::Instance();
  	printf("Hardware Tester for ESP32\n");
 
-	RainbowLedTest();
 	TestClass testClass;
 	char test = 0;
-	
-	Hal::Hardware::Instance()->GetDisplay().setTextSize(1);
-	Hal::Hardware::Instance()->GetDisplay().setTextColor(WHITE);
-	Hal::Hardware::Instance()->GetDisplay().setCursor(0,0);
-	Hal::Hardware::Instance()->GetDisplay().print("   Hardware Tester\n   Display Test\nVersion :%d.%d", 2, 1);
-	Hal::Hardware::Instance()->GetDisplay().display();
-	
+
 	while (1)
 	{
 		executetMenu(test);

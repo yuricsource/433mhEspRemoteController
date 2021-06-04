@@ -275,7 +275,7 @@ union Led
 	array<uint8_t, sizeof(Color)> Bytes;
 	uint32_t Value;
 };
-static_assert(sizeof(Led) == 4);
+//static_assert(sizeof(Led) == 4);
 
 union LedHsv
 {
@@ -288,7 +288,7 @@ union LedHsv
 	array<uint8_t, sizeof(Color)> Bytes;
 	uint32_t Value;
 };
-static_assert(sizeof(LedHsv) == 4);
+//static_assert(sizeof(LedHsv) == 4);
 
 static constexpr uint8_t BitsPerLed = 8 * 3; // each RGB * 8 bits
 

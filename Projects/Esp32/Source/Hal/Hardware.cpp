@@ -35,6 +35,7 @@ Hardware::Hardware() :	_gpio(),
 						_rfControl(&_gpio, &_rmtRemoteControl),
 						_deviceInput(&_gpio, &_adc),
 						_display(SSD1306_LCDWIDTH, SSD1306_LCDHEIGHT, &_i2c)
+						//_codeReceiver(&_gpio, Hal::Gpio::GpioIndex::Gpio16, &_timer0, true)
 {
 	esp_chip_info(&_mcuInfo);
 	esp_base_mac_addr_get(_macAdrress.data());

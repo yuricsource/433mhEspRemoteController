@@ -30,6 +30,7 @@
 #include "IoExtender.h"
 #include "RfControl.h"
 #include "DeviceInput.h"
+//#include "CodeReceiver.h"
 
 
 #include "Adafruit_GFX.h"
@@ -63,6 +64,7 @@ public:
 	RfControl& GetRfControl() { return _rfControl; }
 	DeviceInput& GetDeviceInput() { return _deviceInput; }
 	Adafruit_SSD1306& GetDisplay() { return _display; }
+	//CodeReceiver& GetCodeReceiver() { return _codeReceiver; }
 	uint32_t Milliseconds();
 	void TimerCallback();
 	ResetReason GetResetReason();
@@ -117,6 +119,7 @@ private:
 	RfControl _rfControl;
 	DeviceInput _deviceInput;
 	Adafruit_SSD1306 _display;
+	//CodeReceiver _codeReceiver;
 };
 } // namespace Hal
 

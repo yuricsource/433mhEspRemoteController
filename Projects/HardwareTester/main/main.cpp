@@ -59,6 +59,10 @@ void executetMenu(char Test)
 	case 'L':
 		LearnCode();
 		break;
+	case 'g':
+	case 'G':
+		LearnCode(true);
+		break;
 	case 'i':
 	case 'I':
 		TestI2cDisplay();
@@ -83,6 +87,7 @@ void executetMenu(char Test)
 	printf("[B] - Input Menu\n");
 	printf("[D] - Test controller transmitter\n");
 	printf("[L] - Learn RF remote control code\n");
+	printf("[G] - Learn infrared remote control code\n");
 	printf("[I] - Test I2C display\n");
 }
 

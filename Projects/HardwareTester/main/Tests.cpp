@@ -692,11 +692,11 @@ void ReadButtonAndAnalog()
 	}	
 }
 
-void LearnCode()
+void LearnCode(bool infrared)
 {
 	char test = 0;
 	if (learnerTest == nullptr)
-		learnerTest = new LearnerCode(&Hardware::Instance()->GetGpio(), Hal::Gpio::GpioIndex::Gpio4, &Hardware::Instance()->GetTimer0());
+		learnerTest = new LearnerCode(&Hardware::Instance()->GetGpio(), Hal::Gpio::GpioIndex::Gpio16, &Hardware::Instance()->GetTimer0(), infrared);
 	while (1)
 	{
 		switch (test)

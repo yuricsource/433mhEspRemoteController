@@ -14,10 +14,37 @@ class LearnerCode : Hal::Timer::Callback
 {
 
 public:
-    LearnerCode(Hal::Gpio* gpio, Hal::Gpio::GpioIndex pin, Hal::Timer* timer) : _gpio(gpio), _pin(pin), _timer(timer)
+    LearnerCode(Hal::Gpio* gpio, Hal::Gpio::GpioIndex pin, Hal::Timer* timer, bool infraredLearner = false) : _gpio(gpio), _pin(pin), _timer(timer)
     {
         _timer->AddCallback(this);
         _gpio->ConfigInput(_pin);
+
+        if(infraredLearner)
+        { 
+            // This profile is set to use a fan of 3M
+            _logicLevel = true;
+            _minimunBitsAllowed = 10;
+            _delayLowInMiliseconds = 2.5;
+            _tOnLowInMiliseconds = 0.4;
+            _tOnHighInMiliseconds = 1.3;
+            _tOnMiddleLevel = ((_tOnHighInMiliseconds + _tOnLowInMiliseconds) / 2);
+            _waitCount = (_delayLowInMiliseconds * SamplingFrequency / 1000);
+            _highOrLowCount = (_tOnMiddleLevel * SamplingFrequency / 1000);
+            _skipPreparation = true;
+        }
+        // RF Learner
+        else
+        {
+            _logicLevel = true;
+            _minimunBitsAllowed = 60;
+            _delayLowInMiliseconds = 3;
+            _tOnLowInMiliseconds = 0.35;
+            _tOnHighInMiliseconds = 0.7;
+            _tOnMiddleLevel = ((_tOnHighInMiliseconds + _tOnLowInMiliseconds) / 2);
+            _waitCount = (_delayLowInMiliseconds * SamplingFrequency / 1000);
+            _highOrLowCount = (_tOnMiddleLevel * SamplingFrequency / 1000);
+            _skipPreparation = false;
+        }
     }
     
     enum class CodeLearnerState : uint8_t
@@ -46,13 +73,15 @@ public:
     static constexpr uint32_t SamplingFrequency = 16000; 
 
 private:
-    static constexpr uint32_t MinimunBitsAllowed = 60;
-    static constexpr uint32_t DelayLowInMiliseconds = 3;
-    static constexpr float TOnLowInMiliseconds = 0.35;
-    static constexpr float TOnHighInMiliseconds = 0.7;
-    static constexpr float TOnMiddleLevel = ((TOnHighInMiliseconds + TOnLowInMiliseconds) / 2);
-    static constexpr uint32_t WaitCount = (DelayLowInMiliseconds * SamplingFrequency / 1000);
-    static constexpr uint32_t HighOrLowCount = (TOnMiddleLevel * SamplingFrequency / 1000);
+    uint32_t _minimunBitsAllowed;
+    float _delayLowInMiliseconds;
+    float _tOnLowInMiliseconds;
+    float _tOnHighInMiliseconds;
+    float _tOnMiddleLevel;
+    uint32_t _waitCount;
+    uint32_t _highOrLowCount;
+    bool _logicLevel;
+    bool _skipPreparation;
     Hal::Gpio* _gpio;
     Hal::Gpio::GpioIndex _pin;
     Hal::Timer* _timer;

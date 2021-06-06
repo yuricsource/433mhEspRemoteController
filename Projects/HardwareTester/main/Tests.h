@@ -42,7 +42,7 @@ void TestI2sClock();
 void TestSdCard();
 void IoExtenderMenu();
 void TestTransmitter();
-void LearnCode();
+void LearnCode(bool infrared = false);
 void ReadButtonAndAnalog();
 void RainbowLedTest();
 

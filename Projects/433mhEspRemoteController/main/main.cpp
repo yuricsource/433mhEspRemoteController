@@ -29,11 +29,7 @@ extern "C" void app_main(void)
 	ConfigurationAgent::Instance();
 	ApplicationAgent::Instance();
 	ApplicationAgent::Instance()->Initialize();
-	ApplicationAgent::Instance()->GetWifi().Start();
-	// ApplicationAgent::Instance()->GetHttpServer().Start();
-	ApplicationAgent::Instance()->GetGatewayService().Start();
-	ApplicationAgent::Instance()->GetFirmwareUpdateService().Start();
-	ApplicationAgent::Instance()->GetAudioPlayerService().Start();
+	ApplicationAgent::Instance()->GetRemoteReceiverService().Start();
 	ConfigurationAgent::Instance()->UseDefaultConfiguration();
 
 	for (;;)

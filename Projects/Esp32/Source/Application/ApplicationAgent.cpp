@@ -24,6 +24,7 @@ void ApplicationAgent::Initialize()
     _gatewayService = new GatewayService();
     _firmwareUpdateService = new FirmwareUpdateService();
     _audioPlayerService = new AudioPlayerService();
+    _remoteReceiverService = new RemoteReceiverService();
 }
 
 } // namespace Applications

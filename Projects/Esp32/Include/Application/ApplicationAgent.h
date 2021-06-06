@@ -8,6 +8,7 @@
 #include "IPParser.h"
 #include "FirmwareUpdateService.h"
 #include "AudioPlayerService.h"
+#include "RemoteReceiverService.h"
 
 namespace Applications
 {
@@ -33,6 +34,7 @@ public:
     GatewayService& GetGatewayService(){ return *_gatewayService;}
     FirmwareUpdateService& GetFirmwareUpdateService(){ return *_firmwareUpdateService;}
     AudioPlayerService& GetAudioPlayerService() {return *_audioPlayerService;}
+    RemoteReceiverService& GetRemoteReceiverService() { return *_remoteReceiverService;}
 
 private:
     static ApplicationAgent *_applications;
@@ -41,6 +43,7 @@ private:
     GatewayService *_gatewayService;
     FirmwareUpdateService * _firmwareUpdateService;
     AudioPlayerService *_audioPlayerService;
+    RemoteReceiverService *_remoteReceiverService;
 
 private:
     /// @brief	Hide Copy constructor.

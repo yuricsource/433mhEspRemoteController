@@ -94,7 +94,7 @@ namespace Hal
 #ifdef DEBUG_TIMER
 		printf("Timer::AddCallback()\n");
 #endif
-
+printf("Timer::AddCallback()\n");
 		if (timerCallback == nullptr)
 			return false;
 
@@ -103,9 +103,11 @@ namespace Hal
 			if (callbackList[i] == nullptr)
 			{
 				callbackList[i] = timerCallback;
+				printf("Timer::AddCallback() OK\n");
 				return true;
 			}
 		}
+		printf("Timer::AddCallback() Failed\n");
 		return false;
 	}
 

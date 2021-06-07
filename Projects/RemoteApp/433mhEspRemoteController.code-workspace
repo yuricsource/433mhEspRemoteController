@@ -89,7 +89,8 @@
 			"streambuf": "cpp",
 			"thread": "cpp",
 			"typeinfo": "cpp",
-			"esp_attr.h": "c"
+			"esp_attr.h": "c",
+			"xiosbase": "cpp"
 		}
 	}
 }

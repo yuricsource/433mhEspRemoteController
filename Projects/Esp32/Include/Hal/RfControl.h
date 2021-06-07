@@ -18,7 +18,7 @@ public:
 	~RfControl();
 
 	bool SetCommand(RfCommandArray& command, const uint8_t commandId);
-	bool RunCommand(uint8_t commandId);
+	bool RunCommand(uint8_t commandId, uint8_t count = 1);
 
 private:
 	RfCommandArray _commands[MaxCommandSupported];

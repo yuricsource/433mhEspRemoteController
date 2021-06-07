@@ -25,34 +25,40 @@ bool RfControl::SetCommand(RfCommandArray& command, const uint8_t commandId)
 	return true;
 }
 
-bool RfControl::RunCommand(uint8_t commandId)
+bool RfControl::RunCommand(uint8_t commandId, uint8_t count)
 {
 	RfCommandArray commandToSend = {};
 	
 	memcpy(commandToSend.data(), _commands[commandId].data(), sizeof(RfCommandArray));
 	commandToSend.data()[0] = Hardware::Instance()->GetRandomNumber();
-	Dwt::DelayMilliseconds(12);
-	_rmt->SetProtocol(Rmt::ProtocolSupported::herculiftRemoteControl);
-	// first send the 12 pulses
-	_rmt->SetTimeBitOn(440, 500);
-	_rmt->SetTimeBitOff(440, 500);
-	uint32_t pulses[3];
 
-	memset(pulses, 0xFF, sizeof(pulses));
-	
-	_rmt->SetBitsPerUnit(12);
-	_rmt->SetMaxUnitsToSend(1);
-	_rmt->UpdateBuffer(pulses, sizeof(pulses));
-	_rmt->Write(true);
-	Dwt::DelayMilliseconds(3);
-	_rmt->SetProtocol(Rmt::ProtocolSupported::herculiftRemoteControl);
-	
-	_rmt->SetBitsPerUnit(32);
-	_rmt->SetMaxUnitsToSend(3);
-	_rmt->SetMaxBitsToSend(66);
-	uint32_t* commandBufferPointer = reinterpret_cast<uint32_t*>(commandToSend.data()); 
-	_rmt->UpdateBuffer(commandBufferPointer, 9); // how many bytes has to be sent
-	_rmt->Write(true);
+	for (uint8_t i = 0; i < count; i++)
+	{
+		Dwt::DelayMilliseconds(12);
+		_rmt->SetProtocol(Rmt::ProtocolSupported::herculiftRemoteControl);
+		// first send the 12 pulses
+		_rmt->SetTimeBitOn(440, 500);
+		_rmt->SetTimeBitOff(440, 500);
+		uint32_t pulses[3];
+
+		memset(pulses, 0xFF, sizeof(pulses));
+		
+		_rmt->SetBitsPerUnit(12);
+		_rmt->SetMaxUnitsToSend(1);
+		_rmt->UpdateBuffer(pulses, sizeof(pulses));
+		_rmt->Write(true);
+		Dwt::DelayMilliseconds(3);
+		_rmt->SetProtocol(Rmt::ProtocolSupported::herculiftRemoteControl);
+		
+		_rmt->SetBitsPerUnit(32);
+		_rmt->SetMaxUnitsToSend(3);
+		_rmt->SetMaxBitsToSend(66);
+		uint32_t* commandBufferPointer = reinterpret_cast<uint32_t*>(commandToSend.data()); 
+		_rmt->UpdateBuffer(commandBufferPointer, 9); // how many bytes has to be sent
+		_rmt->Write(true);
+		
+		Dwt::DelayMilliseconds(50);
+	}
 	return true;
 }
 

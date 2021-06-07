@@ -5,8 +5,9 @@
 #include "Adafruit_GFX.h"
 #include "Adafruit_SSD1306.h"
 #include "HalCommon.h"
+#include "CodeReceiver.h"
 
-LearnerCode* learnerTest = nullptr;
+Hal::CodeReceiver* learnerTest = nullptr;
 
 using Hal::Dwt;
 using Hal::Hardware;
@@ -696,7 +697,9 @@ void LearnCode(bool infrared)
 {
 	char test = 0;
 	if (learnerTest == nullptr)
-		learnerTest = new LearnerCode(&Hardware::Instance()->GetGpio(), Hal::Gpio::GpioIndex::Gpio16, &Hardware::Instance()->GetTimer0(), infrared);
+	{
+		learnerTest = &Hal::Hardware::Instance()->GetCodeReceiver();
+	}
 	while (1)
 	{
 		switch (test)
@@ -727,7 +730,7 @@ void LearnCode(bool infrared)
 			{
 				while(true)
 				{
-					if (learnerTest->GetState() == LearnerCode::CodeLearnerState::Finished)
+					if (learnerTest->GetState() == Hal::CodeReceiver::CodeLearnerState::Finished)
 					{
 						learnerTest->PrintCode();
 						learnerTest->Stop();

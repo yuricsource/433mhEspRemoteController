@@ -1,4 +1,6 @@
-#pragma once
+#ifndef INCLUDE_HAL_CODE_RECEIVER_H_
+#define INCLUDE_HAL_CODE_RECEIVER_H_
+
 
 #include <cstring>
 #include <string>
@@ -7,8 +9,8 @@
 #include <cstdarg>
 #include "stdio.h"
 #include "wchar.h"
-#include "Hardware.h"
 #include "Timer.h"
+#include "Gpio.h"
 
 namespace Hal
 {
@@ -17,11 +19,9 @@ class CodeReceiver : Hal::Timer::Callback
 {
 
 public:
-    CodeReceiver(Hal::Gpio* gpio, Hal::Gpio::GpioIndex pin, Hal::Timer* timer, bool infraredLearner = false) : _gpio(gpio), _pin(pin), _timer(timer)
+    CodeReceiver(Hal::Gpio* gpio, Hal::Gpio::GpioIndex pin, Hal::Timer* timer, bool infraredLearner = false) :
+        _gpio(gpio), _pin(pin), _timer(timer)
     {
-        _timer->AddCallback(this);
-        _gpio->ConfigInput(_pin);
-
         if(infraredLearner)
         { 
             // This profile is set to use a fan of 3M
@@ -58,9 +58,27 @@ public:
         Finished
     };
 
+    void Init()
+    {
+        _timer->AddCallback(this);
+        _gpio->ConfigInput(_pin);
+    }
+
     void Stop();
 
+    void Reset();
+
     void Start();
+
+    uint32_t* GetCode()
+    {
+        return _codes;
+    }
+
+    inline bool CodeReceived()
+    {
+        return _codeReceived;
+    }
 
     void TimerCallback() override;
 
@@ -85,15 +103,18 @@ private:
     uint32_t _highOrLowCount;
     bool _logicLevel;
     bool _skipPreparation;
+    bool _codeReceived = false;
     Hal::Gpio* _gpio;
     Hal::Gpio::GpioIndex _pin;
     Hal::Timer* _timer;
     CodeLearnerState _state = CodeLearnerState::None;
     uint32_t _waitCounter = 0;
     uint8_t _data[200] = {};
+    uint32_t _codes[4] = {};
+    uint8_t _codeIndext = 0;
     uint16_t _bufferIndex = 0;
     uint32_t _tOnCounter = 0;
 };
 }
 
-
+#endif /* INCLUDE_HAL_CODE_RECEIVER_H_ */

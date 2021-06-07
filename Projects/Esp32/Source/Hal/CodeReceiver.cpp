@@ -16,7 +16,20 @@ void CodeReceiver::Start()
     _gpio->ConfigInput(_pin);
     _bufferIndex = 0;
     memset(_data, 0, sizeof(_data));
+    _codeReceived = false;
+    _codeIndext = false;
+    memset(_codes, 0, sizeof(_codes));
+    _waitCounter = 0;
+    _tOnCounter = 0;
+
+    _timer->SetTimer(SamplingFrequency);
     _timer->Start();
+}
+
+void CodeReceiver::Reset()
+{
+    Stop();
+    Start();
 }
 
 void CodeReceiver::PrintResult()
@@ -24,8 +37,8 @@ void CodeReceiver::PrintResult()
     printf("\n");
     printf("_bufferIndex:%d, MinimunBitsAllowed:%d, WaitCount:%d, HighOrLowCount:%d\n",
         _bufferIndex, _minimunBitsAllowed, _waitCount, _highOrLowCount);
-        uint32_t code[3] = {};
 
+    memset(_codes, 0, sizeof(_codes));
     printf("Code in bits:\n");
     for(uint8_t i = 0; i < _bufferIndex; i++)
     {
@@ -37,13 +50,14 @@ void CodeReceiver::PrintResult()
         uint8_t buffer32Index = i / 32;
 
         if (_data[i] != 0)
-            code[buffer32Index] += (1 << (31 - (i % 32)));
+            _codes[buffer32Index] += (1 << (31 - (i % 32)));
     }
     printf("\n\n");
     printf("Code in 32 bits Hex\n");
     for (uint8_t i = 0; i < 3; i++)
-        printf("0x%08X ", code[i]);
+        printf("0x%08X ", _codes[i]);
         
+    printf("\n\n");
 }
 
 void CodeReceiver::PrintCode()
@@ -57,7 +71,7 @@ void CodeReceiver::PrintCode()
         if (_data[i] != 0)
             code[buffer32Index] += (1 << (31 - (i % 32)));
     }
-    printf("\n{");
+    printf("\n");
     for (uint8_t i = 0; i < 3; i++)
         if (i == 2)
             printf("0x%08X};", code[i]);
@@ -138,6 +152,18 @@ void CodeReceiver::TimerCallback()
         break;
         case CodeLearnerState::Finished:
         {
+            _codeReceived = true;
+            for(uint8_t i = 0; i < _bufferIndex; i++)
+            {
+                uint8_t buffer32Index = i / 32;
+                assert(buffer32Index <= 1);
+                //if (_data[i] != 0)
+                //    _codes[_codeIndext] += (1 << (31 - (i % 32)));
+            }
+            if (_codeIndext < 3)
+                _codeIndext++;
+            else
+                _codeIndext = 0; 
         }
         break;
         default:

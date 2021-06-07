@@ -34,8 +34,8 @@ Hardware::Hardware() :	_gpio(),
 						_ioExtender(&_gpio, &_i2c, Gpio::GpioIndex::Gpio32, 0x18),
 						_rfControl(&_gpio, &_rmtRemoteControl),
 						_deviceInput(&_gpio, &_adc),
-						_display(SSD1306_LCDWIDTH, SSD1306_LCDHEIGHT, &_i2c)
-						//_codeReceiver(&_gpio, Hal::Gpio::GpioIndex::Gpio16, &_timer0, true)
+						_display(SSD1306_LCDWIDTH, SSD1306_LCDHEIGHT, &_i2c),
+						_codeReceiver(&_gpio, Hal::Gpio::GpioIndex::Gpio16, &_timer0, true)
 {
 	esp_chip_info(&_mcuInfo);
 	esp_base_mac_addr_get(_macAdrress.data());
@@ -81,6 +81,7 @@ Hardware::Hardware() :	_gpio(),
 	//_timer0.AddCallback(this);
 	_timer0.Start();
 
+	_timer0.SetTimer(16000);
 
 	// initializing display
 	_display.begin(SSD1306_SWITCHCAPVCC, 0x3C, false, false);
@@ -89,6 +90,8 @@ Hardware::Hardware() :	_gpio(),
 	_display.setTextColor(WHITE);
 	_display.setCursor(0,0);
 	_display.display();
+	
+	_codeReceiver.Init();
 
 }
 

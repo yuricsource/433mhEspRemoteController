@@ -19,11 +19,11 @@ ApplicationAgent::ApplicationAgent()
 
 void ApplicationAgent::Initialize()
 {
-    _wifiService = new WifiService();
+    // _wifiService = new WifiService();
     // _httpServer = new HttpServer(80);
-    _gatewayService = new GatewayService();
-    _firmwareUpdateService = new FirmwareUpdateService();
-    _audioPlayerService = new AudioPlayerService();
+    // _gatewayService = new GatewayService();
+    // _firmwareUpdateService = new FirmwareUpdateService();
+    // _audioPlayerService = new AudioPlayerService();
     _remoteReceiverService = new RemoteReceiverService();
 }
 

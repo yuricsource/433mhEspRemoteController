@@ -24,7 +24,7 @@ unsigned char const severityInfoLen = 1;
 char const *severityError = "E";
 unsigned char const severityErrorLen = 1;
 
-Logger::LogInfos typeInfos[10] =
+Logger::LogInfos typeInfos[11] =
 {
 	{" HAL  ", 6},
 	{"CONFIG", 6},
@@ -35,7 +35,8 @@ Logger::LogInfos typeInfos[10] =
 	{"WEBSRV", 6},
 	{"GATEWY", 6},
 	{"FWUPDT", 6},
-	{"ADPLAY", 6}
+	{"ADPLAY", 6},
+	{"REMOTE", 6}
 };
 
 void Logger::LogInfo(const char *format, ...)

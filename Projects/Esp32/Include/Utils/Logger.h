@@ -25,6 +25,7 @@ public:
 		Gateway,
 		FirmwareUpdate,
 		AudioPlayer,
+		RemoteReceiver,
 		Unknown = 255
 	};
 

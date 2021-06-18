@@ -22,6 +22,37 @@ public:
     CodeReceiver(Hal::Gpio* gpio, Hal::Gpio::GpioIndex pin, Hal::Timer* timer, bool infraredLearner = false) :
         _gpio(gpio), _pin(pin), _timer(timer)
     {
+        Configure(infraredLearner);
+    }
+    
+    enum class CodeLearnerState : uint8_t
+    {
+        None,
+        Ready,
+        Logging,
+        Finished
+    };
+
+    void Init()
+    {
+        _timer->AddCallback(this);
+        _gpio->ConfigInput(_pin, Gpio::Pull::Up);
+    }
+
+    void Stop();
+
+    void Reset();
+
+    void Start();
+
+    void Configure(Hal::Gpio::GpioIndex pin)
+    {
+        _pin = pin;
+        _gpio->ConfigInput(_pin, Gpio::Pull::Up);
+    }
+
+    void Configure(bool infraredLearner)
+    {
         if(infraredLearner)
         { 
             // This profile is set to use a fan of 3M
@@ -46,29 +77,9 @@ public:
             _tOnMiddleLevel = ((_tOnHighInMiliseconds + _tOnLowInMiliseconds) / 2);
             _waitCount = (_delayLowInMiliseconds * SamplingFrequency / 1000);
             _highOrLowCount = (_tOnMiddleLevel * SamplingFrequency / 1000);
-            _skipPreparation = false;
+            _skipPreparation = true;
         }
     }
-    
-    enum class CodeLearnerState : uint8_t
-    {
-        None,
-        Ready,
-        Logging,
-        Finished
-    };
-
-    void Init()
-    {
-        _timer->AddCallback(this);
-        _gpio->ConfigInput(_pin);
-    }
-
-    void Stop();
-
-    void Reset();
-
-    void Start();
 
     uint32_t* GetCode()
     {
@@ -80,7 +91,7 @@ public:
         return _codeReceived;
     }
 
-    void TimerCallback() override;
+    void IRAM_ATTR TimerCallback() override;
 
     void PrintResult();
     void PrintCode();
@@ -111,7 +122,7 @@ private:
     uint32_t _waitCounter = 0;
     uint8_t _data[200] = {};
     uint32_t _codes[4] = {};
-    uint8_t _codeIndext = 0;
+    uint8_t _codeIndex = 0;
     uint16_t _bufferIndex = 0;
     uint32_t _tOnCounter = 0;
 };

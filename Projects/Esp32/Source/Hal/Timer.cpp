@@ -42,7 +42,7 @@ namespace Hal
 		interruptHandler->SetCallback(this);
 	}
 
-	void Timer::InterruptCallback()
+	void IRAM_ATTR Timer::InterruptCallback()
 	{
 		// Call all interruptions registered in this timer
 #ifdef DEBUG_TIMER

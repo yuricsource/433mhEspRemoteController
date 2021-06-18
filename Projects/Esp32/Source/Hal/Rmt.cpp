@@ -9,6 +9,7 @@ using Utilities::DebugAssert;
 
 Rmt::Rmt(Gpio *IoPins, Gpio::GpioIndex transmitterPin, RmtChannel channel, uint16_t bufferSize, uint16_t unitSize) : _gpio(IoPins), _transmitterPin(transmitterPin)
 {
+	IoPins->ConfigOutput(transmitterPin, Hal::Gpio::OutputType::PullUp);
 	rmt_config_t config;
 	config.rmt_mode = RMT_MODE_TX;
 	config.channel = static_cast<rmt_channel_t>(channel);

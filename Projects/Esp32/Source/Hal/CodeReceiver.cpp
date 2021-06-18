@@ -1,4 +1,5 @@
 #include "CodeReceiver.h"
+#include "Hardware.h"
 
 namespace Hal
 {
@@ -17,7 +18,7 @@ void CodeReceiver::Start()
     _bufferIndex = 0;
     memset(_data, 0, sizeof(_data));
     _codeReceived = false;
-    _codeIndext = false;
+    _codeIndex = 0;
     memset(_codes, 0, sizeof(_codes));
     _waitCounter = 0;
     _tOnCounter = 0;
@@ -35,11 +36,11 @@ void CodeReceiver::Reset()
 void CodeReceiver::PrintResult()
 {
     printf("\n");
-    printf("_bufferIndex:%d, MinimunBitsAllowed:%d, WaitCount:%d, HighOrLowCount:%d\n",
-        _bufferIndex, _minimunBitsAllowed, _waitCount, _highOrLowCount);
+    printf("_bufferIndex:%d, MinimunBitsAllowed:%d, WaitCount:%d, HighOrLowCount:%d",
+            _bufferIndex, _minimunBitsAllowed, _waitCount, _highOrLowCount);
 
     memset(_codes, 0, sizeof(_codes));
-    printf("Code in bits:\n");
+    // printf("Code in bits:\n");
     for(uint8_t i = 0; i < _bufferIndex; i++)
     {
         if (i%32 == 0)
@@ -52,12 +53,12 @@ void CodeReceiver::PrintResult()
         if (_data[i] != 0)
             _codes[buffer32Index] += (1 << (31 - (i % 32)));
     }
-    printf("\n\n");
-    printf("Code in 32 bits Hex\n");
+    printf("\n");
+    // printf("Code in 32 bits Hex\n");
     for (uint8_t i = 0; i < 3; i++)
         printf("0x%08X ", _codes[i]);
         
-    printf("\n\n");
+    printf("\n");
 }
 
 void CodeReceiver::PrintCode()
@@ -80,7 +81,7 @@ void CodeReceiver::PrintCode()
     
 }
 
-void CodeReceiver::TimerCallback()
+void IRAM_ATTR CodeReceiver::TimerCallback()
 {
     switch(_state)
     {
@@ -117,20 +118,6 @@ void CodeReceiver::TimerCallback()
             if (_gpio->Get(_pin) == _logicLevel)
             {
                 _tOnCounter++;
-
-                _waitCounter++;
-                if (_waitCounter > _waitCount)
-                {
-                    if (_bufferIndex < _minimunBitsAllowed)
-                    {
-                        _bufferIndex = 0;
-                        _waitCounter = 0;
-                        _state = CodeLearnerState::Ready;
-                    }
-                    else
-                        _state = CodeLearnerState::Finished;
-                }
-
             }
             else
             {
@@ -147,23 +134,44 @@ void CodeReceiver::TimerCallback()
                     _tOnCounter = 0;
                     _waitCounter = 0;
                 }
+                else
+                {
+                    _waitCounter++;
+                    if (_waitCounter > _waitCount)
+                    {
+                        if (_bufferIndex < _minimunBitsAllowed)
+                        {
+                            _bufferIndex = 0;
+                            _waitCounter = 0;
+                            _tOnCounter = 0;
+                            _state = CodeLearnerState::None;
+                        }
+                        else
+                        {
+                            _state = CodeLearnerState::Finished;
+                        }
+                    }
+                }
             }
         }
         break;
         case CodeLearnerState::Finished:
         {
-            _codeReceived = true;
-            for(uint8_t i = 0; i < _bufferIndex; i++)
+            if (_codeReceived == false)
             {
-                uint8_t buffer32Index = i / 32;
-                assert(buffer32Index <= 1);
-                //if (_data[i] != 0)
-                //    _codes[_codeIndext] += (1 << (31 - (i % 32)));
+                _codeReceived = true;
+                // for(uint8_t i = 0; i < _bufferIndex; i++)
+                // {
+                //     uint8_t buffer32Index = i / 32;
+                //     assert(buffer32Index <= 1);
+                //     if (_data[i] != 0)
+                //     _codes[_codeIndext] += (1 << (31 - (i % 32)));
+                // }
+                // if (_codeIndext < 3)
+                //     _codeIndext++;
+                // else
+                //     _codeIndext = 0; 
             }
-            if (_codeIndext < 3)
-                _codeIndext++;
-            else
-                _codeIndext = 0; 
         }
         break;
         default:

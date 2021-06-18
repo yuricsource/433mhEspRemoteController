@@ -129,7 +129,7 @@ void TimerInterruptHandler::SetCallback(TimerInterruptHandler::Callback *handler
 	callbackList[interruptIndex] = handler;
 }
 
-void TimerInterruptHandler::InterruptProcessor(Hal::Preemption preemption)
+void IRAM_ATTR TimerInterruptHandler::InterruptProcessor(Hal::Preemption preemption)
 {
 	uint8_t interruptIndex = (preemption == Preemption::TIMER0) ? 0 : 1;
 

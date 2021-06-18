@@ -57,7 +57,7 @@ void executetMenu(char Test)
 		break;
 	case 'l':
 	case 'L':
-		LearnCode();
+		LearnCode(false);
 		break;
 	case 'g':
 	case 'G':

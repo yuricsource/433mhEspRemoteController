@@ -12,7 +12,7 @@ RfControl::RfControl(Gpio *IoPins, Rmt* rmt) : _gpio(IoPins), _rmt(rmt)
 	memset(&_commands[0], 0, sizeof(_commands[0]));
 	_commands[0] = {0x22437856, 0xF3BA1FFB, 0x80000000};
 	_commands[1] = {0x38BBF977, 0x079B877B, 0x40000000};
-	_commands[2] = {0x1C1F7312, 0x079B877D, 0x40000000};
+	_commands[2] = {0xAB6B1BE8, 0x079B877D, 0x40000000};
 	// _commands[0] = {0x00000008, 0xFB1FBAF3, 0x56784322};
 }
 

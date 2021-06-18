@@ -700,6 +700,14 @@ void LearnCode(bool infrared)
 	{
 		learnerTest = &Hal::Hardware::Instance()->GetCodeReceiver();
 	}
+
+	// if (infrared)
+	// 	learnerTest->Configure(Hal::Gpio::GpioIndex::Gpio16);
+	// else
+	// 	learnerTest->Configure(Hal::Gpio::GpioIndex::Gpio14);
+
+	learnerTest->Configure(infrared);
+
 	while (1)
 	{
 		switch (test)
@@ -728,16 +736,16 @@ void LearnCode(bool infrared)
 			case 'k':
 			case 'K':
 			{
+				printf("Printing code:\n");
 				while(true)
 				{
-					if (learnerTest->GetState() == Hal::CodeReceiver::CodeLearnerState::Finished)
+					if (learnerTest->CodeReceived())
 					{
-						learnerTest->PrintCode();
+						learnerTest->PrintResult();
 						learnerTest->Stop();
 						learnerTest->Start();
-						vTaskDelay(3000);
 					}
-					vTaskDelay(10);
+					vTaskDelay(1000);
 				}
 			}
 			break;

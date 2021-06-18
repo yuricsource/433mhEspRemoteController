@@ -28,7 +28,7 @@ public:
 	static void IRAM_ATTR CallbackHandler(void *arg);
 	void Enable(TimerInterruptHandler::Callback *handler);
 	void Disable(Hal::Preemption preemption);
-	void InterruptProcessor(Hal::Preemption preemption);
+	void IRAM_ATTR InterruptProcessor(Hal::Preemption preemption);
 	uint32_t GetLoad(Preemption preemption);
 	void SetLoad(Preemption preemption, uint32_t value);
 	static constexpr uint8_t TimerDivider = 32;								  //  Hardware timer clock divider

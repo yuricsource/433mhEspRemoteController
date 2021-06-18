@@ -38,7 +38,7 @@ private:
 	Adc* _adc;
 	Gpio::GpioIndex digitalInputIndex[MaxDigitalInputs] =
 	{
-		Gpio::GpioIndex::Gpio5,
+		Gpio::GpioIndex::Gpio26,
 		Gpio::GpioIndex::Gpio18
 	};
 	

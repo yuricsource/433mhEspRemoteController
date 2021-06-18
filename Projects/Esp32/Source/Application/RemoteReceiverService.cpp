@@ -25,7 +25,23 @@ void RemoteReceiverService::Run()
 	Delay(1000);
 	Logger::LogInfo(Utilities::Logger::LogSource::RemoteReceiver, "Remote Receiver Service Initialized.");
 	Hal::Hardware* hardware = Hal::Hardware::Instance();
-
+#ifdef SPG_GATE
+	bool buttomState = false;
+	for(;;)
+	{
+		Delay(300);
+		
+		if (hardware->GetDeviceInput().GetDigitalInput(Hal::DeviceInput::DigitalInputIndex::UserButtonEnter) != buttomState)
+		{
+			buttomState = hardware->GetDeviceInput().GetDigitalInput(Hal::DeviceInput::DigitalInputIndex::UserButtonEnter);
+			if (!buttomState)
+			{
+				Logger::LogInfo(Utilities::Logger::LogSource::RemoteReceiver, "Transmitting Code.");
+				hardware->GetRfControl().RunCommand(2, 10);
+			}
+		}
+	}
+#else
 	hardware->GetCodeReceiver().Stop();
 	hardware->GetCodeReceiver().Start();
 	for(;;)
@@ -49,6 +65,7 @@ void RemoteReceiverService::Run()
 			hardware->GetCodeReceiver().Reset();
 		}
 	}
+#endif
 }
 
 } // namespace Applications

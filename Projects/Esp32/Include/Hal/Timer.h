@@ -32,7 +32,7 @@ public:
 
 protected:
 	static void InterruptHandler(void *arg);
-	void InterruptCallback();
+	void IRAM_ATTR InterruptCallback();
 
 private:
 	TimerInterruptHandler *interruptHandler;

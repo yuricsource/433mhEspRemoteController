@@ -701,10 +701,10 @@ void LearnCode(bool infrared)
 		learnerTest = &Hal::Hardware::Instance()->GetCodeReceiver();
 	}
 
-	// if (infrared)
-	// 	learnerTest->Configure(Hal::Gpio::GpioIndex::Gpio16);
-	// else
-	// 	learnerTest->Configure(Hal::Gpio::GpioIndex::Gpio14);
+	if (infrared)
+		learnerTest->Configure(Hal::Gpio::GpioIndex::Gpio4);
+	else
+		learnerTest->Configure(Hal::Gpio::GpioIndex::Gpio14);
 
 	learnerTest->Configure(infrared);
 

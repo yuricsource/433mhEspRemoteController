@@ -27,6 +27,7 @@ void RemoteReceiverService::Run()
 	Hal::Hardware* hardware = Hal::Hardware::Instance();
 #ifdef SPG_GATE
 	bool buttomState = false;
+	uint8_t codeId = 2;
 	for(;;)
 	{
 		Delay(300);
@@ -36,8 +37,8 @@ void RemoteReceiverService::Run()
 			buttomState = hardware->GetDeviceInput().GetDigitalInput(Hal::DeviceInput::DigitalInputIndex::UserButtonEnter);
 			if (!buttomState)
 			{
-				Logger::LogInfo(Utilities::Logger::LogSource::RemoteReceiver, "Transmitting Code.");
-				hardware->GetRfControl().RunCommand(2, 10);
+				Logger::LogInfo(Utilities::Logger::LogSource::RemoteReceiver, "Transmitting Code. Code ID:%d", codeId);
+				hardware->GetRfControl().RunCommand(codeId, 10);
 			}
 		}
 	}

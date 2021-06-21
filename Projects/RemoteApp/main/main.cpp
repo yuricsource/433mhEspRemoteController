@@ -26,11 +26,11 @@ using Utilities::Logger;
 extern "C" void app_main(void)
 {
 	Hardware * hardware = Hardware::Instance();
-	ConfigurationAgent::Instance();
+	//ConfigurationAgent::Instance();
 	ApplicationAgent::Instance();
 	ApplicationAgent::Instance()->Initialize();
 	ApplicationAgent::Instance()->GetRemoteReceiverService().Start();
-	ConfigurationAgent::Instance()->UseDefaultConfiguration();
+	//ConfigurationAgent::Instance()->UseDefaultConfiguration();
 
 	for (;;)
 	{

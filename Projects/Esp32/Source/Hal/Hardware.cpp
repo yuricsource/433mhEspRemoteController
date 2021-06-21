@@ -29,7 +29,7 @@ Hardware::Hardware() :	_gpio(),
 						_sdCard(&_gpio, Gpio::GpioIndex::Gpio23, Gpio::GpioIndex::Gpio19, Gpio::GpioIndex::Gpio22, Gpio::GpioIndex::Gpio21),
 						_rmtLeds(&_gpio, Gpio::GpioIndex::Gpio27, RmtChannel::RmtChannel1, Hal::BitsPerLed * Hal::MaxAddressableLeds, Hal::BitsPerLed),
 #ifdef SPG_GATE
-						_rmtRemoteControl(&_gpio, Gpio::GpioIndex::Gpio3, RmtChannel::RmtChannel0, Hal::BitsPerLed * Hal::MaxAddressableLeds, Hal::BitsPerLed),
+						_rmtRemoteControl(&_gpio, Gpio::GpioIndex::Gpio25, RmtChannel::RmtChannel0, Hal::BitsPerLed * Hal::MaxAddressableLeds, Hal::BitsPerLed),
 #else
 						_rmtRemoteControl(&_gpio, Gpio::GpioIndex::Gpio4, RmtChannel::RmtChannel0, Hal::BitsPerLed * Hal::MaxAddressableLeds, Hal::BitsPerLed),
 #endif

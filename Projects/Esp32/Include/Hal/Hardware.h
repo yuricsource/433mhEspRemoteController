@@ -36,7 +36,7 @@
 #include "Adafruit_GFX.h"
 #include "Adafruit_SSD1306.h"
 
-// #define SPG_GATE 1
+#define SPG_GATE 1
 
 namespace Hal
 {

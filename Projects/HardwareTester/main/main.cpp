@@ -19,17 +19,11 @@
 #include "Rng.h"
 #include <cstring>
 
-#include "Adafruit_GFX.h"
-#include "Adafruit_SSD1306.h"
 
 void executetMenu(char Test)
 {
 	switch (Test)
 	{
-	case 't':
-	case 'T':
-		TestLed();
-		LedMenu();
 		break;
 	case 'r':
 	case 'R':
@@ -43,14 +37,6 @@ void executetMenu(char Test)
 	case 'S':
 		TestSpiffs();
 		break;
-	case 'v':
-	case 'V':
-		TestSdCard();
-		break;
-	case 'w':
-	case 'W':
-		WifiMenu();
-		break;
 	case 'd':
 	case 'D':
 		TestTransmitter();
@@ -63,14 +49,8 @@ void executetMenu(char Test)
 	case 'G':
 		LearnCode(true);
 		break;
-	case 'i':
-	case 'I':
-		TestI2cDisplay();
 		break;
-	case 'b':
-	case 'B':
-		ReadButtonAndAnalog();
-		break;
+
 	default:
 		break;
 	}
@@ -78,17 +58,12 @@ void executetMenu(char Test)
 	printf("\n");
 	printf("Main menu:\n");
 	printf("----------\n");
-	printf("[T] - Led Menu \n");
 	printf("[R] - Software Reset Test\n");
 	printf("[F] - Deep Sleep for 5 Seconds.\n");
 	printf("[S] - Test SPIFFS\n");
-	printf("[V] - Test SD Card\n");
-	printf("[W] - WiFi Menu\n");
-	printf("[B] - Input Menu\n");
 	printf("[D] - Test controller transmitter\n");
 	printf("[L] - Learn RF remote control code\n");
 	printf("[G] - Learn infrared remote control code\n");
-	printf("[I] - Test I2C display\n");
 }
 
 extern "C" void app_main(void)

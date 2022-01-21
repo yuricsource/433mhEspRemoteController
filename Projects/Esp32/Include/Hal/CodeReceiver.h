@@ -125,6 +125,7 @@ private:
     uint8_t _codeIndex = 0;
     uint16_t _bufferIndex = 0;
     uint32_t _tOnCounter = 0;
+    uint32_t _codeIndext = 0;
 };
 }
 

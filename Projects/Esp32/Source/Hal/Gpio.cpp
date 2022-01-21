@@ -66,11 +66,6 @@ void Gpio::Toggle(Gpio::GpioIndex index)
 
 void Gpio::SetMode(Gpio::GpioIndex index, Gpio::Mode mode)
 {
-	uint8_t pin = static_cast<uint8_t>(index);
-	pins[pin].mode = mode;
-#ifdef DEBUG
-	printf("Setting Gpio mode: %d\n", static_cast<uint8_t>(mode));
-#endif
 	gpio_set_direction(static_cast<gpio_num_t>(index), static_cast<gpio_mode_t>(mode));
 }
 
@@ -93,7 +88,7 @@ void Gpio::SetAlternate(Gpio::GpioIndex index, Gpio::AltFunc altFunc)
 void Gpio::ConfigInput(Gpio::GpioIndex index, Gpio::Pull pull)
 {
 	SetMode(index, Mode::Input);
-	SetPull(index, pull);
+	// SetPull(index, pull);
 }
 
 void Gpio::ConfigOutput(Gpio::GpioIndex index, Gpio::OutputType outputType)

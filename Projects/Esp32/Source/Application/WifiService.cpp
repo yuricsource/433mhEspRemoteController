@@ -36,7 +36,7 @@ void WifiService::changeState(WifiState wifiState)
 
 void WifiService::Run()
 {
-    tcpip_adapter_init();
+    // tcpip_adapter_init();
     //DebugAssert(esp_netif_init(), ESP_OK);
 
     WifiDriver &_wifiDriver = Hardware::Instance()->GetWifi();

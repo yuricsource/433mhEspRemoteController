@@ -160,17 +160,17 @@ void IRAM_ATTR CodeReceiver::TimerCallback()
             if (_codeReceived == false)
             {
                 _codeReceived = true;
-                // for(uint8_t i = 0; i < _bufferIndex; i++)
-                // {
-                //     uint8_t buffer32Index = i / 32;
-                //     assert(buffer32Index <= 1);
-                //     if (_data[i] != 0)
-                //     _codes[_codeIndext] += (1 << (31 - (i % 32)));
-                // }
-                // if (_codeIndext < 3)
-                //     _codeIndext++;
-                // else
-                //     _codeIndext = 0; 
+                for(uint8_t i = 0; i < _bufferIndex; i++)
+                {
+                    uint8_t buffer32Index = i / 32;
+                    assert(buffer32Index <= 1);
+                    if (_data[i] != 0)
+                    _codes[_codeIndext] += (1 << (31 - (i % 32)));
+                }
+                if (_codeIndext < 3)
+                    _codeIndext++;
+                else
+                    _codeIndext = 0; 
             }
         }
         break;
